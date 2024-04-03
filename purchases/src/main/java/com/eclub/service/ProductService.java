@@ -2,14 +2,14 @@ package com.eclub.service;
 
 import com.eclub.domain.Product;
 import com.eclub.domain.Product.ProductId;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface ProductService {
 
-    void createProduct(Product product);
+    Mono<Void> createProduct(Product product);
 
-    void buyProduct(ProductId productId, int quantity);
+    Mono<Void> buyProduct(ProductId productId, int quantity);
 
-    List<Product> listStock();
+    Flux<Product> listStock();
 }
