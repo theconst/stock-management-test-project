@@ -1,4 +1,5 @@
 rootProject.name = 'EClubTestTask'
 include 'purchases'
 include 'sales'
+include 'database'
 
