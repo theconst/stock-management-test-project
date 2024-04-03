@@ -1,5 +1,6 @@
 package com.eclub.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
@@ -11,6 +12,7 @@ import java.math.BigDecimal;
 @Data
 public class StockItemEntity {
     @Id
+    @Column(name = "stock_item_id")
     long stockItemId;
 
     BigDecimal sellingPrice;
