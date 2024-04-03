@@ -2,14 +2,15 @@ package com.eclub.service;
 
 import com.eclub.domain.Product;
 import com.eclub.domain.Product.ProductId;
+import com.eclub.domain.StockItem.StockItemId;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface ProductService {
 
-    Mono<Void> createProduct(Product product);
+    Mono<ProductId> createProduct(Product product);
 
-    Mono<Void> buyProduct(ProductId productId, int quantity);
+    Mono<StockItemId> buyProduct(ProductId productId, int quantity);
 
     Flux<Product> listStock();
 }
