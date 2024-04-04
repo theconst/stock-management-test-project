@@ -10,7 +10,7 @@ import org.springframework.data.relational.core.mapping.Table;
 public class ProductEntity {
     @Id
     @Column("product_id")
-    long productId;
+    Long productId;
 
     String name;
 

@@ -6,11 +6,11 @@ import org.mapstruct.Mapper;
 
 @Mapper(config = MappingConfiguration.class)
 public interface ProductIdMapper {
-    default Product.ProductId map(long productId) {
-        return new Product.ProductId(productId);
+    default Product.ProductId map(Long productId) {
+        return productId == null ? null : new Product.ProductId(productId);
     }
 
-    default long map(@Nonnull Product.ProductId productId) {
-        return productId.id();
+    default Long map(Product.ProductId productId) {
+        return productId == null ? null : productId.id();
     }
 }
