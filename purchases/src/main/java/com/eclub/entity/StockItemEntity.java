@@ -1,22 +1,22 @@
 package com.eclub.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.math.BigDecimal;
 
-@Entity
+@Table(name = "stock")
 @Data
 public class StockItemEntity {
     @Id
-    @Column(name = "stock_item_id")
+    @Column("stock_item_id")
     long stockItemId;
 
     BigDecimal sellingPrice;
 
-    @ManyToOne
-    ProductEntity product;
+    //Many To One
+    @Column("product_id")
+    long productId;
 }

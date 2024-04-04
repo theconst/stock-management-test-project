@@ -1,15 +1,15 @@
 package com.eclub.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
-@Entity
+@Table(name = "product")
 @Data
 public class ProductEntity {
     @Id
-    @Column(name = "product_id")
+    @Column("product_id")
     long productId;
 
     String name;
