@@ -38,8 +38,17 @@ public class ProductController {
 
     @PostMapping
     public Mono<ProductDto> createProduct(@RequestBody ProductDto product) {
+        return upsertProduct(product);
+    }
+
+    @PutMapping
+    public Mono<ProductDto> modifyProduct(@RequestBody ProductDto product) {
+        return upsertProduct(product);
+    }
+
+    private Mono<ProductDto> upsertProduct(ProductDto product) {
         return productService
-                .createProduct(productDtoToProductMapper.map(product))
+                .upsertProduct(productDtoToProductMapper.map(product))
                 .map(productToProductDtoMapper::map);
     }
 }

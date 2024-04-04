@@ -30,7 +30,7 @@ class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Mono<Product> createProduct(Product product) {
+    public Mono<Product> upsertProduct(Product product) {
         return productRepository
                 .save(productToProductEntityMapper.map(product))
                 .map(productEntityToProductMapper::map);

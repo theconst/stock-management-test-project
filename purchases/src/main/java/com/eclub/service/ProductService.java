@@ -11,7 +11,7 @@ public interface ProductService {
 
     Mono<Product> getProduct(ProductId id);
 
-    Mono<Product> createProduct(Product product);
+    Mono<Product> upsertProduct(Product product);
 
     Mono<StockItemId> buyProduct(ProductId productId, Price sellingPrice, int quantity);
 
