@@ -1,5 +1,7 @@
 package com.eclub.repository;
 
-public interface ProductRepository {
-    //TODO(kkovlachuk): implement
+import com.eclub.entity.ProductEntity;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+
+public interface ProductRepository extends ReactiveCrudRepository<ProductEntity, Long> {
 }

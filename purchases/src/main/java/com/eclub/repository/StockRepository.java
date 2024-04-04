@@ -1,5 +1,7 @@
 package com.eclub.repository;
 
-public interface StockRepository {
-    //TODO(kkovalchuk): impelement
+import com.eclub.entity.StockItemEntity;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+
+public interface StockRepository extends ReactiveCrudRepository<StockItemEntity, Long> {
 }
