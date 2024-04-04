@@ -32,7 +32,7 @@ public class ProductController {
     @GetMapping("/")
     public Flux<ProductDto> listAllProducts() {
         return productService
-                .listStock()
+                .listProducts()
                 .map(productToProductDtoMapper::map);
     }
 

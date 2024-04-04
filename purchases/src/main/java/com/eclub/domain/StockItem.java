@@ -2,8 +2,12 @@ package com.eclub.domain;
 
 import lombok.Builder;
 
-@Builder
-public record StockItem(StockItemId id, Product product, Price sellingPrice, int quantity) {
+@Builder(toBuilder = true)
+public record StockItem(StockItemId id, BatchNumber batchNumber, Product product, int quantity) {
 
-    public record StockItemId(long id) {}
+    public record BatchNumber(long batchNumber) {
+    }
+
+    public record StockItemId(long id) {
+    }
 }

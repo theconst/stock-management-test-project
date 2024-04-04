@@ -1,9 +1,7 @@
 package com.eclub.service;
 
-import com.eclub.domain.Price;
 import com.eclub.domain.Product;
 import com.eclub.domain.Product.ProductId;
-import com.eclub.domain.StockItem.StockItemId;
 import com.eclub.mapper.ProductEntityToProductMapper;
 import com.eclub.mapper.ProductIdMapper;
 import com.eclub.mapper.ProductToProductEntityMapper;
@@ -36,14 +34,8 @@ class ProductServiceImpl implements ProductService {
                 .map(productEntityToProductMapper::map);
     }
 
-    //TODO: design
     @Override
-    public Mono<StockItemId> buyProduct(ProductId productId, Price sellingPrice, int quantity) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Flux<Product> listStock() {
+    public Flux<Product> listProducts() {
         return productRepository
                 .findAll()
                 .map(productEntityToProductMapper::map);
