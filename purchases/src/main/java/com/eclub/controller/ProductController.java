@@ -37,7 +37,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public Mono<ProductDto> createProduct(ProductDto product) {
+    public Mono<ProductDto> createProduct(@RequestBody ProductDto product) {
         return productService
                 .createProduct(productDtoToProductMapper.map(product))
                 .map(productToProductDtoMapper::map);

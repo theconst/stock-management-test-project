@@ -21,7 +21,6 @@ class ProductServiceImpl implements ProductService {
     private final ProductEntityToProductMapper productEntityToProductMapper;
     private final ProductToProductEntityMapper productToProductEntityMapper;
     private final ProductRepository productRepository;
-    private final StockService stockService;
 
     @Override
     public Mono<Product> getProduct(ProductId id) {
