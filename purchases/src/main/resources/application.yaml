@@ -1,0 +1,4 @@
+db:
+  name: eclub
+  password: ${DB_PASSWORD}
+  host: ${DB_HOST}
