@@ -29,6 +29,7 @@ public class ProductController {
     }
 
     //TODO(kkovalchuk): pagination
+    @GetMapping("/")
     public Flux<ProductDto> listAllProducts() {
         return productService
                 .listStock()
