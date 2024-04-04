@@ -1,0 +1,20 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="purchases" type="Application" factoryName="Application">
+    <envs>
+      <env name="DB_HOST" value="localhost" />
+      <env name="DB_USER" value="eclub" />
+      <env name="DB_PASSWORD" value="eclub" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="com.eclub.Application" />
+    <module name="EClubTestTask.purchases.main" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="com.eclub.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
