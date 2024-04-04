@@ -1,0 +1,2 @@
+
+GRANT CREATE ON SCHEMA public TO eclub;

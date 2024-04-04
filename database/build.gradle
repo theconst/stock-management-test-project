@@ -1,11 +1,25 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.flywaydb:flyway-database-postgresql:$flywayVersion"
+        classpath "org.postgresql:postgresql:$postgresqlVersion"
+    }
+}
+
 plugins {
     id 'java'
-    id 'org.flywaydb.flyway'  version '10.11.0'
+    id 'org.flywaydb.flyway' version "$flywayVersion"
 }
 
 group = 'com.eclub'
 version = '1.0-SNAPSHOT'
 
-repositories {
-    mavenCentral()
+flyway {
+    def environment = System.getenv()
+    url = environment['DB_URL']
+    user = environment['DB_USER'] ?: 'eclub'
+    password = environment['DB_PASSWORD']
 }
