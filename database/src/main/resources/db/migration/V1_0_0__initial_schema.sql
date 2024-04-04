@@ -12,5 +12,6 @@ CREATE TABLE stock (
     batch_number BIGINT NOT NULL,
     quantity INT,
     PRIMARY KEY (stock_item_id),
-    FOREIGN KEY (product_id) REFERENCES product
+    FOREIGN KEY (product_id) REFERENCES product,
+    CONSTRAINT unique_product_id_batch_number UNIQUE(product_id, batch_number)
 );
