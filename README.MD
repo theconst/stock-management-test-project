@@ -4,8 +4,8 @@
 ### Requisites
 #### Microservice for the product purchases
 - [x] REST API for the creation of products.
-- [] REST API for the product purchases.
-- [] Use a message queue (RabbitMQ) to add the purchased products to the stock available in the warehouse.
+- [x] REST API for the product purchases.
+- [x] Use a message queue (RabbitMQ) to add the purchased products to the stock available in the warehouse.
 #### Microservices for the product sales
 - [] Implement a REST API for creating clients.
 - [] Implement a REST API for the sale of products.
