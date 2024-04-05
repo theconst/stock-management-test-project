@@ -1,6 +1,6 @@
 spring:
   application:
-    name: purchase
+    name: purchases
 
 db:
   name: eclub
