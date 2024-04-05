@@ -11,7 +11,6 @@ public class SellMessage implements StockTransactionMessage {
     @Builder.Default
     Type type = Type.SELL;
 
-    Long productId;
-    Long batchNumber;
+    Long stockItemId;
     Integer quantity;
 }

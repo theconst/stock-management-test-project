@@ -5,10 +5,7 @@ import com.eclub.domain.StockItem;
 import com.eclub.domain.StockItem.StockItemId;
 import com.eclub.domain.StockOperation;
 import com.eclub.entity.StockItemEntity;
-import com.eclub.mapper.BatchNumberMapper;
-import com.eclub.mapper.ProductIdMapper;
-import com.eclub.mapper.PurchaseToStockItemEntityMapper;
-import com.eclub.mapper.StockItemEntityToStockItemMapper;
+import com.eclub.mapper.*;
 import com.eclub.repository.ProductRepository;
 import com.eclub.repository.StockRepository;
 import lombok.AllArgsConstructor;
@@ -25,6 +22,7 @@ class StockServiceImpl implements StockService {
     private final StockRepository stockRepository;
 
     private final ProductIdMapper productIdMapper;
+    private final StockItemIdMapper stockItemIdMapper;
     private final BatchNumberMapper batchNumberMapper;
     private final StockItemEntityToStockItemMapper stockItemEntityToStockItemMapper;
     private final PurchaseToStockItemEntityMapper purchaseToStockItemEntityMapper;
@@ -40,11 +38,11 @@ class StockServiceImpl implements StockService {
     @Override
     @Transactional                                                        //TODO(kkovalchuk): verify indeed transaction
     public Mono<StockItem> update(StockOperation stockOperation) {
-        var batchNumber = batchNumberMapper.map(stockOperation.batchNumber());
-        var productId = productIdMapper.map(stockOperation.productId());
-
-        return stockRepository
-                .findByBatchNumberAndProductId(batchNumber, productId)
+        return stockOperation.match(
+                        purchase -> stockRepository.findByBatchNumberAndProductId(
+                            batchNumberMapper.map(purchase.batchNumber()),
+                            productIdMapper.map(purchase.productId())),
+                        sell -> stockRepository.findById(stockItemIdMapper.map(sell.stockItemId())))
                 .doOnNext(stockItemEntity -> {
                     int inStock = stockItemEntity.getQuantity();
                     int newQuantity = stockOperation.match(
