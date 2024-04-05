@@ -5,7 +5,7 @@ import com.eclub.dto.PurchaseDto;
 import com.eclub.dto.StockItemDto;
 import com.eclub.mapper.StockItemIdMapper;
 import com.eclub.mapper.StockItemToStockItemDtoMapper;
-import com.eclub.queue.StockUpdatePublisher;
+import com.eclub.queue.PurchasePublisher;
 import com.eclub.service.StockService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class StockController {
     private final StockItemToStockItemDtoMapper stockItemToStockItemDtoMapper;
     private final PurchaseDtoToPurchaseMessageMapper purchaseDtoToPurchaseMessageMapperMapper;
     private final StockService stockService;
-    private final StockUpdatePublisher stockUpdatePublisher;
+    private final PurchasePublisher purchasePublisher;
 
     @GetMapping("/{id}")
     public Mono<StockItemDto> getStockItemById(@PathVariable Long id) {
@@ -42,7 +42,7 @@ public class StockController {
     //TODO(kkovalchuk): move to separate controller?
     @PutMapping("/purchases")
     public Mono<ResponseEntity<Void>> purchase(@RequestBody PurchaseDto purchase) {
-        return stockUpdatePublisher
+        return purchasePublisher
                 .publish(purchaseDtoToPurchaseMessageMapperMapper.map(purchase))
                 .thenReturn(ResponseEntity.accepted().build());
     }
