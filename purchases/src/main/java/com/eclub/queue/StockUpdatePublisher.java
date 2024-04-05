@@ -1,6 +1,6 @@
 package com.eclub.queue;
 
-import com.eclub.queue.message.PurchaseMessage;
+import com.eclub.queue.message.StockTransactionMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -19,7 +19,7 @@ public class StockUpdatePublisher {
     private final String purchaseRoutingKey;
 
     //TODO(kkovalchuk): separate message for queue
-    public Mono<Object> publishPurchase(PurchaseMessage purchase) {
+    public Mono<Object> publish(StockTransactionMessage purchase) {
         return Mono.fromRunnable(() -> {
                     log.info("Sending stock update {}[{}]", purchase, purchaseRoutingKey);
                     rabbitTemplate.convertAndSend(purchaseRoutingKey, purchase);

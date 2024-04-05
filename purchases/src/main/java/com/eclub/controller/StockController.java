@@ -40,11 +40,10 @@ public class StockController {
     }
 
     //TODO(kkovalchuk): move to separate controller?
-
     @PutMapping("/purchases")
     public Mono<ResponseEntity<Void>> purchase(@RequestBody PurchaseDto purchase) {
         return stockUpdatePublisher
-                .publishPurchase(purchaseDtoToPurchaseMessageMapperMapper.map(purchase))
+                .publish(purchaseDtoToPurchaseMessageMapperMapper.map(purchase))
                 .thenReturn(ResponseEntity.accepted().build());
     }
 }
