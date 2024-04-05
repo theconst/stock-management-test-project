@@ -3,8 +3,6 @@ package com.eclub.controller;
 
 import com.eclub.dto.PurchaseDto;
 import com.eclub.dto.StockItemDto;
-import com.eclub.mapper.PurchaseDtoToPurchaseMapper;
-import com.eclub.mapper.PurchaseToPurchaseDtoMapper;
 import com.eclub.mapper.StockItemIdMapper;
 import com.eclub.mapper.StockItemToStockItemDtoMapper;
 import com.eclub.queue.StockUpdatePublisher;
@@ -22,10 +20,9 @@ import reactor.core.publisher.Mono;
 public class StockController {
     private final StockItemIdMapper stockItemIdMapper;
     private final StockItemToStockItemDtoMapper stockItemToStockItemDtoMapper;
-    private final PurchaseDtoToPurchaseMapper purchaseDtoToPurchaseMapper;
+    private final PurchaseDtoToPurchaseMessageMapper purchaseDtoToPurchaseMessageMapperMapper;
     private final StockService stockService;
     private final StockUpdatePublisher stockUpdatePublisher;
-    private final PurchaseToPurchaseDtoMapper purchaseToPurchaseDtoMapper;
 
     @GetMapping("/{id}")
     public Mono<StockItemDto> getStockItemById(@PathVariable Long id) {
@@ -45,7 +42,7 @@ public class StockController {
     @PutMapping("/purchases")
     public Mono<ResponseEntity<Void>> purchase(@RequestBody PurchaseDto purchase) {
         return stockUpdatePublisher
-                .publishPurchase(purchase)
+                .publishPurchase(purchaseDtoToPurchaseMessageMapperMapper.map(purchase))
                 .thenReturn(ResponseEntity.accepted().build());
     }
 }

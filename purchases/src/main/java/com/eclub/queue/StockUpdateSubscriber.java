@@ -1,7 +1,7 @@
 package com.eclub.queue;
 
-import com.eclub.dto.PurchaseDto;
-import com.eclub.mapper.PurchaseDtoToPurchaseMapper;
+import com.eclub.mapper.PurchaseMessageToPurchaseMapper;
+import com.eclub.queue.message.PurchaseMessage;
 import com.eclub.service.StockService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,12 +17,12 @@ import java.time.Duration;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 class StockUpdateSubscriber {
     private final StockService stockService;
-    private final PurchaseDtoToPurchaseMapper purchaseDtoToPurchaseMapper;
+    private final PurchaseMessageToPurchaseMapper purchaseMessageToPurchaseMapper;
 
     @RabbitListener(queues = "${purchase-queue.name:purchases}")
-    //TODO(kkovalchuk): separate message for purchase
-    public void updateStock(@Payload PurchaseDto purchase) {
+    public void updateStock(@Payload PurchaseMessage purchase) {
         log.info("Updating stock with {}", purchase);
-        stockService.purchase(purchaseDtoToPurchaseMapper.map(purchase)).block(Duration.ofSeconds(10));
+        //TODO: verify
+        stockService.purchase(purchaseMessageToPurchaseMapper.map(purchase)).block(Duration.ofSeconds(10));
     }
 }

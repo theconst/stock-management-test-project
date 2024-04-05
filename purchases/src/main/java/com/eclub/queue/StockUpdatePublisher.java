@@ -1,20 +1,14 @@
 package com.eclub.queue;
 
-import com.eclub.dto.PurchaseDto;
-import lombok.AllArgsConstructor;
+import com.eclub.queue.message.PurchaseMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.AsyncRabbitTemplate;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 @Service
 @Slf4j
@@ -25,7 +19,7 @@ public class StockUpdatePublisher {
     private final String purchaseRoutingKey;
 
     //TODO(kkovalchuk): separate message for queue
-    public Mono<Object> publishPurchase(PurchaseDto purchase) {
+    public Mono<Object> publishPurchase(PurchaseMessage purchase) {
         return Mono.fromRunnable(() -> {
                     log.info("Sending stock update {}[{}]", purchase, purchaseRoutingKey);
                     rabbitTemplate.convertAndSend(purchaseRoutingKey, purchase);
