@@ -39,6 +39,8 @@ public class StockController {
                 .map(stockItemToStockItemDtoMapper::map);
     }
 
+    //TODO(kkovalchuk): move to separate controller?
+
     @PutMapping("/purchases")
     public Mono<ResponseEntity<Void>> purchase(@RequestBody PurchaseDto purchase) {
         return stockUpdatePublisher
