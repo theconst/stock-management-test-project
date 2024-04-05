@@ -41,7 +41,8 @@ public class ProductController {
         return upsertProduct(product);
     }
 
-    @PutMapping
+    //TODO: separate upsert and create
+    @PutMapping("/{id}")
     public Mono<ProductDto> modifyProduct(@RequestBody ProductDto product) {
         return upsertProduct(product);
     }
