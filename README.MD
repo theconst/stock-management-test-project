@@ -7,7 +7,7 @@
 - [x] REST API for the product purchases.
 - [x] Use a message queue (RabbitMQ) to add the purchased products to the stock available in the warehouse.
 #### Microservices for the product sales
-- [] Implement a REST API for creating clients.
+- [] Implement a REST API for creating clients (customers).
 - [] Implement a REST API for the sale of products.
 - [] Use a message queue (RabbitMQ) to subtract the products sold from the stock available in the warehouse.
 #### Shared database
