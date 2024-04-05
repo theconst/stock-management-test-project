@@ -1,6 +1,6 @@
 package com.eclub.queue;
 
-import com.eclub.queue.message.StockTransactionMessage;
+import com.eclub.queue.message.SellMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -13,16 +13,14 @@ import reactor.core.scheduler.Schedulers;
 @Service
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class StockUpdatePublisher {
+public class SalePublisher {
     private final RabbitTemplate rabbitTemplate;
     @Value("${stock-queue.routing-key}")
-    private final String stockQueueRoutingKey;
-
-    //TODO(kkovalchuk): separate message for queue
-    public Mono<Object> publish(StockTransactionMessage purchase) {
+    private final String purchaseRoutingKey;
+    public Mono<Object> publish(SellMessage sale) {
         return Mono.fromRunnable(() -> {
-                    log.info("Sending stock update {}[{}]", purchase, stockQueueRoutingKey);
-                    rabbitTemplate.convertAndSend(stockQueueRoutingKey, purchase);
+                    log.info("Sending stock update {}[{}]", sale, purchaseRoutingKey);
+                    rabbitTemplate.convertAndSend(purchaseRoutingKey, sale);
                 })
                 .subscribeOn(Schedulers.boundedElastic());
     }

@@ -7,5 +7,5 @@ import java.math.BigDecimal;
 
 @Builder
 @Jacksonized
-public record SaleDto(Long id, Long customerId, BigDecimal price) {
+public record SaleDto(Long id, Long batchNumber, Long productId, Long customerId, BigDecimal price, Integer quantity) {
 }
