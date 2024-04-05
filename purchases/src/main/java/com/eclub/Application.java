@@ -2,7 +2,7 @@ package com.eclub;
 
 import com.eclub.controller.ProductController;
 import com.eclub.mapper.MappingConfiguration;
-import com.eclub.queue.PurchaseQueueConfiguration;
+import com.eclub.queue.StockQueueConfiguration;
 import com.eclub.repository.RepositoryConfiguration;
 import com.eclub.service.ProductService;
 import org.springframework.boot.SpringApplication;
@@ -17,7 +17,7 @@ import org.springframework.web.reactive.config.EnableWebFlux;
         ProductController.class,
         MappingConfiguration.class,
         ProductService.class,
-        PurchaseQueueConfiguration.class
+        StockQueueConfiguration.class
 })
 public class Application {
     public static void main(String... args) {

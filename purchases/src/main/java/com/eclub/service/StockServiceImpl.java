@@ -3,6 +3,7 @@ package com.eclub.service;
 import com.eclub.domain.Purchase;
 import com.eclub.domain.StockItem;
 import com.eclub.domain.StockItem.StockItemId;
+import com.eclub.domain.StockOperation;
 import com.eclub.entity.StockItemEntity;
 import com.eclub.mapper.BatchNumberMapper;
 import com.eclub.mapper.ProductIdMapper;
@@ -38,16 +39,37 @@ class StockServiceImpl implements StockService {
 
     @Override
     @Transactional                                                        //TODO(kkovalchuk): verify indeed transaction
-    public Mono<StockItem> purchase(Purchase purchase) {
-        var batchNumber = batchNumberMapper.map(purchase.batchNumber());
-        var productId = productIdMapper.map(purchase.productId());
+    public Mono<StockItem> update(StockOperation stockOperation) {
+        var batchNumber = batchNumberMapper.map(stockOperation.batchNumber());
+        var productId = productIdMapper.map(stockOperation.productId());
+
         return stockRepository
                 .findByBatchNumberAndProductId(batchNumber, productId)
-                .doOnNext(stockItemEntity ->
-                        stockItemEntity.setQuantity(stockItemEntity.getQuantity() + purchase.quantity()))
+                .doOnNext(stockItemEntity -> {
+                    int inStock = stockItemEntity.getQuantity();
+                    int newQuantity = stockOperation.match(
+                            purchase -> inStock + purchase.quantity(),
+                            sale -> subtractFromStock(inStock, sale.quantity()));
+
+                    //TODO(kkovalchuk): try immutable entities
+                    stockItemEntity.setQuantity(newQuantity);
+                })
                 .flatMap(stockRepository::save)
-                .switchIfEmpty(createNewStockItem(purchase))
+                .switchIfEmpty(stockOperation.match(
+                        this::createNewStockItem,
+                        sale -> Mono.error(new IllegalStateException(
+                                "Cannot sale non existing stock item [%s]".formatted(stockOperation)))))
                 .flatMap(this::assembleStockItem);
+    }
+
+    private static int subtractFromStock(int inStock, int quantity) {
+        int result = inStock - quantity;
+        if (result < 0) {
+            throw new IllegalArgumentException(
+                    "Stock exhausted. Attempting to sell %s items, but only %s in stock"
+                            .formatted(quantity, inStock));
+        }
+        return result;
     }
 
     private Mono<StockItemEntity> createNewStockItem(Purchase purchase) {

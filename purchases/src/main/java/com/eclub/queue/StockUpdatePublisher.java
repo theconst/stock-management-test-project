@@ -15,7 +15,7 @@ import reactor.core.scheduler.Schedulers;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class StockUpdatePublisher {
     private final RabbitTemplate rabbitTemplate;
-    @Value("${purchase-queue.routing-key:purchases}")
+    @Value("${stock-queue.routing-key}")
     private final String purchaseRoutingKey;
 
     //TODO(kkovalchuk): separate message for queue

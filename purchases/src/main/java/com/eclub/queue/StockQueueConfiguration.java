@@ -21,10 +21,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableRabbit
 @AllArgsConstructor(onConstructor = @__(@Autowired))
-public class PurchaseQueueConfiguration {
-    @Value("${purchase-queue.name:purchases}")
+public class StockQueueConfiguration {
+    @Value("${stock-queue.name}")
     private final String purchaseQueueName;
-    @Value("${purchase-queue.routing-key:purchases}")
+    @Value("${stock-queue.routing-key}")
     private final String purchaseQueueRoutingKey;
 
     @Bean

@@ -1,7 +1,7 @@
 package com.eclub.queue;
 
-import com.eclub.mapper.PurchaseMessageToPurchaseMapper;
-import com.eclub.queue.message.PurchaseMessage;
+import com.eclub.mapper.StockTransactionMessageToStockOperationMapper;
+import com.eclub.queue.message.StockTransactionMessage;
 import com.eclub.service.StockService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,12 +17,12 @@ import java.time.Duration;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 class StockUpdateSubscriber {
     private final StockService stockService;
-    private final PurchaseMessageToPurchaseMapper purchaseMessageToPurchaseMapper;
+    private final StockTransactionMessageToStockOperationMapper stockTransactionMessageToStockOperationMapper;
 
-    @RabbitListener(queues = "${purchase-queue.name:purchases}")
-    public void updateStock(@Payload PurchaseMessage purchase) {
-        log.info("Updating stock with {}", purchase);
-        //TODO: verify
-        stockService.purchase(purchaseMessageToPurchaseMapper.map(purchase)).block(Duration.ofSeconds(10));
+    @RabbitListener(queues = "${stock-queue.name}")
+    public void updateStock(@Payload StockTransactionMessage transaction) {
+        log.info("Updating stock with {}", transaction);
+        //TODO(kkovalchuk): verify
+        stockService.update(stockTransactionMessageToStockOperationMapper.map(transaction)).block(Duration.ofSeconds(10));
     }
 }
