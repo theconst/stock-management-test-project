@@ -1,9 +1,9 @@
-STOCK_ITEMS_ENDPOINT_URL="${STOCK_ITEMS_ENDPOINT_URL:-localhost:8080/stock-items/}"
+PURCHASES_URL="${PURCHASES_URL:-localhost:8080/purchases/}"
 
-curl -XPUT "${STOCK_ITEMS_ENDPOINT_URL}purchases" \
+curl -XPUT "${PURCHASES_URL}" \
   -H 'Content-Type: application/json' \
   -d '{"productId": 1, "batchNumber": 1, "quantity": 10}'
 
-curl -XPUT "${STOCK_ITEMS_ENDPOINT_URL}purchases" \
+curl -XPUT "${PURCHASES_URL}" \
   -H 'Content-Type: application/json' \
   -d '{"productId": 2, "batchNumber": 1, "quantity": 20}'

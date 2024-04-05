@@ -1,16 +1,16 @@
 package com.eclub.controller;
 
 
-import com.eclub.dto.PurchaseDto;
 import com.eclub.dto.StockItemDto;
 import com.eclub.mapper.StockItemIdMapper;
 import com.eclub.mapper.StockItemToStockItemDtoMapper;
-import com.eclub.queue.PurchasePublisher;
 import com.eclub.service.StockService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -20,9 +20,7 @@ import reactor.core.publisher.Mono;
 public class StockController {
     private final StockItemIdMapper stockItemIdMapper;
     private final StockItemToStockItemDtoMapper stockItemToStockItemDtoMapper;
-    private final PurchaseDtoToPurchaseMessageMapper purchaseDtoToPurchaseMessageMapperMapper;
     private final StockService stockService;
-    private final PurchasePublisher purchasePublisher;
 
     @GetMapping("/{id}")
     public Mono<StockItemDto> getStockItemById(@PathVariable Long id) {
@@ -37,13 +35,5 @@ public class StockController {
         return stockService
                 .listStock()
                 .map(stockItemToStockItemDtoMapper::map);
-    }
-
-    //TODO(kkovalchuk): move to separate controller?
-    @PutMapping("/purchases")
-    public Mono<ResponseEntity<Void>> purchase(@RequestBody PurchaseDto purchase) {
-        return purchasePublisher
-                .publish(purchaseDtoToPurchaseMessageMapperMapper.map(purchase))
-                .thenReturn(ResponseEntity.accepted().build());
     }
 }

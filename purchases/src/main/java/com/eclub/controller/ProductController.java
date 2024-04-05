@@ -6,6 +6,7 @@ import com.eclub.mapper.ProductIdMapper;
 import com.eclub.mapper.ProductToProductDtoMapper;
 import com.eclub.service.ProductService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -13,7 +14,7 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("products")
-@AllArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ProductController {
 
     private final ProductService productService;
