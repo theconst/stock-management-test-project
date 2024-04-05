@@ -4,11 +4,14 @@ package com.eclub.controller;
 import com.eclub.dto.PurchaseDto;
 import com.eclub.dto.StockItemDto;
 import com.eclub.mapper.PurchaseDtoToPurchaseMapper;
+import com.eclub.mapper.PurchaseToPurchaseDtoMapper;
 import com.eclub.mapper.StockItemIdMapper;
 import com.eclub.mapper.StockItemToStockItemDtoMapper;
+import com.eclub.queue.StockUpdatePublisher;
 import com.eclub.service.StockService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -21,6 +24,8 @@ public class StockController {
     private final StockItemToStockItemDtoMapper stockItemToStockItemDtoMapper;
     private final PurchaseDtoToPurchaseMapper purchaseDtoToPurchaseMapper;
     private final StockService stockService;
+    private final StockUpdatePublisher stockUpdatePublisher;
+    private final PurchaseToPurchaseDtoMapper purchaseToPurchaseDtoMapper;
 
     @GetMapping("/{id}")
     public Mono<StockItemDto> getStockItemById(@PathVariable Long id) {
@@ -38,9 +43,9 @@ public class StockController {
     }
 
     @PutMapping("/purchases")
-    public Mono<StockItemDto> purchase(@RequestBody PurchaseDto purchase) {
-        return stockService
-                .purchase(purchaseDtoToPurchaseMapper.map(purchase))
-                .map(stockItemToStockItemDtoMapper::map);
+    public Mono<ResponseEntity<Void>> purchase(@RequestBody PurchaseDto purchase) {
+        return stockUpdatePublisher
+                .publishPurchase(purchase)
+                .thenReturn(ResponseEntity.accepted().build());
     }
 }

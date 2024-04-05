@@ -17,10 +17,11 @@ dependencies {
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+
     implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
     implementation 'org.springframework.data:spring-data-relational'
-
-
     implementation 'org.postgresql:r2dbc-postgresql:1.0.4.RELEASE'
 }
 
