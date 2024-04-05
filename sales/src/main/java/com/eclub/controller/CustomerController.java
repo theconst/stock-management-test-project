@@ -1,9 +1,7 @@
 package com.eclub.controller;
 
 import com.eclub.dto.CustomerDto;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -16,8 +14,13 @@ public class CustomerController {
         return Mono.just(CustomerDto.builder().id(Long.valueOf(1L)).build());
     }
 
+    @PutMapping("/{id}")
+    public Mono<CustomerDto> modifyCustomer(@RequestBody CustomerDto customerDto) {
+        return Mono.just(CustomerDto.builder().id(Long.valueOf(1L)).build());
+    }
+
     @PostMapping("/")
-    public Mono<CustomerDto> createCustomer() {
+    public Mono<CustomerDto> createCustomer(@RequestBody CustomerDto customerDto) {
         return Mono.just(CustomerDto.builder().id(Long.valueOf(1L)).build());
     }
 
