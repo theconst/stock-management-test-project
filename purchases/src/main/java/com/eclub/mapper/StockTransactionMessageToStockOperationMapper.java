@@ -8,7 +8,7 @@ import com.eclub.queue.message.SellMessage;
 import com.eclub.queue.message.StockTransactionMessage;
 import org.mapstruct.Mapper;
 
-@Mapper(config = MappingConfiguration.class)
+@Mapper(uses = {ProductIdMapper.class, BatchNumberMapper.class}, config = MappingConfiguration.class)
 public interface StockTransactionMessageToStockOperationMapper {
 
     default StockOperation map(StockTransactionMessage transaction) {
