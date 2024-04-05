@@ -18,7 +18,6 @@ public class PurchasePublisher {
     @Value("${stock-queue.routing-key}")
     private final String stockQueueRoutingKey;
 
-    //TODO(kkovalchuk): separate message for queue
     public Mono<Object> publish(PurchaseMessage purchase) {
         return Mono.fromRunnable(() -> {
                     log.info("Sending stock update {}[{}]", purchase, stockQueueRoutingKey);
