@@ -13,8 +13,8 @@ public class SaleItemEntity {
     Long saleId;
     @Column("customer_id")
     Long customerId;
-    @Column("product_id")
-    Long productId;
+    @Column("stock_item_id")
+    Long stockItemId;
 
     BigDecimal price;
 
