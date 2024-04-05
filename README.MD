@@ -7,13 +7,13 @@
 - [x] REST API for the product purchases.
 - [x] Use a message queue (RabbitMQ) to add the purchased products to the stock available in the warehouse.
 #### Microservices for the product sales
-- [] Implement a REST API for creating clients (customers).
+- [x] Implement a REST API for creating clients (customers).
 - [] Implement a REST API for the sale of products.
-- [] Use a message queue (RabbitMQ) to subtract the products sold from the stock available in the warehouse.
+- [x] Use a message queue (RabbitMQ) to subtract the products sold from the stock available in the warehouse.
 #### Shared database
 - [x] Both microservices must use the same database to manage the product information.
 #### Warehouse operation:
-- [] Stock update operations must be performed asynchronously through the queue messages (RabbitMQ). 
+- [x] Stock update operations must be performed asynchronously through the queue messages (RabbitMQ). 
 There is only one warehouse or warehouse for all the products. 
 
 ### Expected output
