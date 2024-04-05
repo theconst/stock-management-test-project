@@ -8,17 +8,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
-@RestController("/sales")
+@RestController
+@RequestMapping("/sales")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class SalesController {
     private final SaleDtoToSellMessageMapper saleDtoToSellMessageMapper;
     private final SalePublisher salePublisher;
 
-    @PutMapping
-    public Mono<ResponseEntity<Void>> sell(SaleDto sale) {
+    @PutMapping("/")
+    public Mono<ResponseEntity<Void>> sell(@RequestBody SaleDto sale) {
         SellMessage sellMessage = saleDtoToSellMessageMapper.map(sale);
         return salePublisher.publish(sellMessage)
                 .thenReturn(ResponseEntity.accepted().build());
