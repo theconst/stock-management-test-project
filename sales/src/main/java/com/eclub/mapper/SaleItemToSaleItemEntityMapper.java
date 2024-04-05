@@ -5,9 +5,8 @@ import com.eclub.model.SaleItem;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(config = MappingConfiguration.class)
+@Mapper(uses = {SaleItemIdMapper.class, CustomerIdMapper.class}, config = MappingConfiguration.class)
 public interface SaleItemToSaleItemEntityMapper {
     @Mapping(target = "saleId", source = "saleItem.id")
-    @Mapping(target = "customerId", source = "customer.id")
-    SaleItemEntity map(SaleItem saleItem, Long stockItemId);
+    SaleItemEntity map(SaleItem saleItem);
 }

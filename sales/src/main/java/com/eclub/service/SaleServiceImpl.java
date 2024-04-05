@@ -25,8 +25,7 @@ class SaleServiceImpl implements SaleService {
     @Transactional
     public Mono<SaleItem> recordSale(SaleItem saleItem) {
         return saleItemRepository
-                .save(saleItemToSaleItemEntityMapper.map(saleItem, saleItem.stockItemId()))
-                .flatMap(sale -> customerRepository.findById(saleItem.customerId().id())
-                        .map(customer ->  saleItemEntityToSaleItemMapper.map(sale, customer)));
+                .save(saleItemToSaleItemEntityMapper.map(saleItem))
+                .map(saleItemEntityToSaleItemMapper::map);
     }
 }
