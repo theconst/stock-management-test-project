@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: sales
+
+server:
+  port: 8081
+
+db:
+  name: eclub
+  username: eclub
+  password: ${DB_PASSWORD}
+  host: ${DB_HOST}

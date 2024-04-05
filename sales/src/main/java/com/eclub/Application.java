@@ -20,8 +20,8 @@ import org.springframework.web.reactive.config.EnableWebFlux;
         CustomerService.class,
         StockQueueConfiguration.class
 })
-public class Main {
+public class Application {
     public static void main(String... args) {
-        SpringApplication.run(Main.class);
+        SpringApplication.run(Application.class);
     }
 }
