@@ -1,9 +1,11 @@
 package com.eclub.controller;
 
 import com.eclub.dto.SaleDto;
+import com.eclub.mapper.SaleDtoToSellItemMapper;
 import com.eclub.mapper.SaleDtoToSellMessageMapper;
 import com.eclub.queue.SalePublisher;
 import com.eclub.queue.message.SellMessage;
+import com.eclub.service.SaleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +20,16 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class SalesController {
     private final SaleDtoToSellMessageMapper saleDtoToSellMessageMapper;
+    private final SaleDtoToSellItemMapper saleDtoToSellItemMapper;
     private final SalePublisher salePublisher;
+    private final SaleService saleService;
 
     @PutMapping("/")
     public Mono<ResponseEntity<Void>> sell(@RequestBody SaleDto sale) {
         SellMessage sellMessage = saleDtoToSellMessageMapper.map(sale);
-        return salePublisher.publish(sellMessage)
+        //TODO(kkovalchuk): flaky
+        return saleService.recordSale(saleDtoToSellItemMapper.map(sale))
+                .then(salePublisher.publish(sellMessage))
                 .thenReturn(ResponseEntity.accepted().build());
     }
 }

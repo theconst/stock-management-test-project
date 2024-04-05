@@ -11,7 +11,6 @@ public class SellMessage {
     @Builder.Default
     String type = "SELL"; //TODO(kkovalchuk): probably sales should also work with stock
 
-    Long productId;
-    Long batchNumber;
+    Long stockItemId;
     Integer quantity;
 }
