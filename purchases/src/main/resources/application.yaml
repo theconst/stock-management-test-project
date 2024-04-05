@@ -7,3 +7,7 @@ db:
   username: eclub
   password: ${DB_PASSWORD}
   host: ${DB_HOST}
+
+stock-queue:
+  name: stock.transactions
+  routing-key: stock.transactions
