@@ -1,11 +1,8 @@
 package com.eclub.queue;
 
 
-import lombok.AllArgsConstructor;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.Queue;
+import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.AsyncRabbitTemplate;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.connection.ConnectionNameStrategy;
@@ -20,12 +17,13 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableRabbit
-@AllArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class StockQueueConfiguration {
+
     @Value("${stock-queue.name}")
-    private final String purchaseQueueName;
+    private final String stockQueueName;
     @Value("${stock-queue.routing-key}")
-    private final String purchaseQueueRoutingKey;
+    private final String stockQueueRoutingKey;
 
     @Bean
     public ConnectionNameStrategy connectionNameStrategy() {
@@ -34,12 +32,33 @@ public class StockQueueConfiguration {
 
     @Bean
     public Queue queue() {
-        return new Queue(purchaseQueueName, true);
+        return QueueBuilder.durable(stockQueueName)
+                .deadLetterExchange(deadLetterExchangeName())
+                .build();
+    }
+
+    @Bean
+    public Queue deadLetterQueue() {
+        return QueueBuilder.durable(String.join(".", stockQueueName, "dlq")).build();
+    }
+
+    @Bean
+    public FanoutExchange deadLetterExchange() {
+        return new FanoutExchange(deadLetterExchangeName());
+    }
+
+    private String deadLetterExchangeName() {
+        return String.join(".", stockQueueName, "dlx");
+    }
+
+    @Bean
+    public Binding deadLetterBinding() {
+        return BindingBuilder.bind(deadLetterQueue()).to(deadLetterExchange());
     }
 
     @Bean
     public Binding binding(Queue queue) {
-        return BindingBuilder.bind(queue).to(DirectExchange.DEFAULT).with(purchaseQueueRoutingKey);
+        return BindingBuilder.bind(queue).to(DirectExchange.DEFAULT).with(stockQueueRoutingKey);
     }
 
     @Bean

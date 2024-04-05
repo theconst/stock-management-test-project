@@ -2,10 +2,7 @@ package com.eclub.queue;
 
 
 import lombok.AllArgsConstructor;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.AsyncRabbitTemplate;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.connection.ConnectionNameStrategy;
@@ -34,7 +31,9 @@ public class StockQueueConfiguration {
 
     @Bean
     public Queue queue() {
-        return new Queue(stockQueueName, true);
+        return QueueBuilder.durable(stockQueueName)
+                .deadLetterExchange(String.join(".", stockQueueName, "dlx"))
+                .build();
     }
 
     @Bean
