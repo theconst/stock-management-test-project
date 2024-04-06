@@ -5,6 +5,6 @@ WORKDIR /sales
 
 COPY build/libs/sales.jar sales.jar
 
-EXPOSE 8080
+EXPOSE 8081
 
 ENTRYPOINT ["java", "-jar", "sales.jar"]
