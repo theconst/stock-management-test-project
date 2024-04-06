@@ -21,7 +21,7 @@ class StockUpdateListener {
 
     @RabbitListener(queues = "${stock-queue.name}")
     public void updateStock(@Payload StockTransactionMessage transaction) {
-        log.info("Updating stock with {}[{}]", transaction);
+        log.info("Updating stock with {}", transaction);
         //TODO(kkovalchuk): verify
         stockService.update(stockTransactionMessageToStockOperationMapper.map(transaction)).block(Duration.ofSeconds(10));
     }

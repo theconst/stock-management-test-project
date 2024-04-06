@@ -9,7 +9,7 @@ import com.eclub.queue.message.StockTransactionMessage;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(uses = {ProductIdMapper.class, BatchNumberMapper.class, StockItemIdMapper.class},
+@Mapper(uses = {ProductIdMapper.class, BatchNumberMapper.class, StockItemIdMapper.class, OperationIdMapper.class},
         config = MappingConfiguration.class)
 public interface StockTransactionMessageToStockOperationMapper {
 
