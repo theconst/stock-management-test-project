@@ -10,7 +10,7 @@ import lombok.extern.jackson.Jacksonized;
 public class AddToStockMessage implements StockTransactionMessage {
     @Builder.Default
     Type type = Type.ADD_TO_STOCK;
-
+    String messageId;
     Long productId;
     Long batchNumber;
     Integer quantity;

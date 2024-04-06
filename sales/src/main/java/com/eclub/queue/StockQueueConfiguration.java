@@ -48,6 +48,8 @@ public class StockQueueConfiguration {
 
     @Bean
     public MessageConverter messageConverter() {
-        return new Jackson2JsonMessageConverter();
+        var converter = new Jackson2JsonMessageConverter();
+        converter.setCreateMessageIds(true);
+        return converter;
     }
 }

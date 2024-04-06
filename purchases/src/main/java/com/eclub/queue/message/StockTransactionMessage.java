@@ -17,4 +17,6 @@ public sealed interface StockTransactionMessage permits AddToStockMessage, Remov
     enum Type {
         ADD_TO_STOCK, REMOVE_FROM_STOCK
     }
+
+    String getMessageId();
 }
