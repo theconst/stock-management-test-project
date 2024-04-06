@@ -2,10 +2,7 @@ spring:
   application:
     name: purchases
   rabbitmq:
-    listener:
-      type: direct
-      direct:
-        default-requeue-rejected: false
+    host: ${RABBIT_HOST}
 
 db:
   name: eclub

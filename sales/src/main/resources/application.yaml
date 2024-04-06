@@ -1,6 +1,12 @@
 spring:
   application:
     name: sales
+  rabbitmq:
+    host: ${RABBIT_HOST}
+    listener:
+      type: direct
+      direct:
+        default-requeue-rejected: false
 
 server:
   port: 8081
