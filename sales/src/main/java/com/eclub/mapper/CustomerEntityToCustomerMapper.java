@@ -1,7 +1,7 @@
 package com.eclub.mapper;
 
 import com.eclub.entity.CustomerEntity;
-import com.eclub.model.Customer;
+import com.eclub.domain.Customer;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

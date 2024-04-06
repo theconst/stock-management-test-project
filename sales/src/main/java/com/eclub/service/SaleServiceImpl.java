@@ -2,7 +2,7 @@ package com.eclub.service;
 
 import com.eclub.mapper.SaleItemEntityToSaleItemMapper;
 import com.eclub.mapper.SaleItemToSaleItemEntityMapper;
-import com.eclub.model.SaleItem;
+import com.eclub.domain.SaleItem;
 import com.eclub.repository.CustomerRepository;
 import com.eclub.repository.SaleItemRepository;
 import lombok.RequiredArgsConstructor;

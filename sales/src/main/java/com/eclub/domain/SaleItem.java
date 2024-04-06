@@ -1,6 +1,6 @@
-package com.eclub.model;
+package com.eclub.domain;
 
-import com.eclub.model.Customer.CustomerId;
+import com.eclub.domain.Customer.CustomerId;
 import lombok.Builder;
 
 import java.math.BigDecimal;

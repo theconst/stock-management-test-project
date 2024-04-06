@@ -1,7 +1,7 @@
 package com.eclub.service;
 
-import com.eclub.model.Customer;
-import com.eclub.model.Page;
+import com.eclub.domain.Customer;
+import com.eclub.domain.Page;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

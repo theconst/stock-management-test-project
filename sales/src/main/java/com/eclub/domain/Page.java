@@ -1,4 +1,4 @@
-package com.eclub.model;
+package com.eclub.domain;
 
 /**
  * Represents page of data

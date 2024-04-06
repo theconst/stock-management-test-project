@@ -3,7 +3,7 @@ package com.eclub.controller;
 import com.eclub.dto.CustomerDto;
 import com.eclub.mapper.CustomerDtoToCustomerMapper;
 import com.eclub.mapper.CustomerToCustomerDtoMapper;
-import com.eclub.model.Page;
+import com.eclub.domain.Page;
 import com.eclub.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

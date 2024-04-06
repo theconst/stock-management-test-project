@@ -1,7 +1,7 @@
 package com.eclub.mapper;
 
 import com.eclub.entity.SaleItemEntity;
-import com.eclub.model.SaleItem;
+import com.eclub.domain.SaleItem;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

@@ -1,6 +1,6 @@
 package com.eclub.service;
 
-import com.eclub.model.SaleItem;
+import com.eclub.domain.SaleItem;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 

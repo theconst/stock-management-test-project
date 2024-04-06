@@ -1,6 +1,6 @@
 package com.eclub.mapper;
 
-import com.eclub.model.SaleItem.SaleItemId;
+import com.eclub.domain.SaleItem.SaleItemId;
 import org.mapstruct.Mapper;
 
 @Mapper(config = MappingConfiguration.class)
