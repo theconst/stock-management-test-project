@@ -19,8 +19,6 @@ public class PurchaseController {
     private final PurchaseDtoToPurchaseMessageMapper purchaseDtoToPurchaseMessageMapperMapper;
     private final PurchasePublisher purchasePublisher;
 
-
-    //TODO(kkovalchuk): move to separate controller?
     @PutMapping("/")
     public Mono<ResponseEntity<Void>> purchase(@RequestBody PurchaseDto purchase) {
         return purchasePublisher
