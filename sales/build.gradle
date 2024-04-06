@@ -12,6 +12,10 @@ java {
     }
 }
 
+lombok {
+    version = "${lombokVersion}"
+}
+
 repositories {
     mavenCentral()
 }
@@ -29,10 +33,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
     implementation 'org.springframework.data:spring-data-relational'
     implementation 'org.postgresql:r2dbc-postgresql:1.0.4.RELEASE'
-}
-
-lombok {
-    version = "${lombokVersion}"
 }
 
 test {
