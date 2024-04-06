@@ -3,7 +3,7 @@ LABEL authors="kko"
 
 WORKDIR /sales
 
-COPY build/libs/sales.jar sales.jar
+COPY build/libs/sales-*.jar sales.jar
 
 EXPOSE 8081
 
