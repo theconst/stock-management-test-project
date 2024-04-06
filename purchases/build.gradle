@@ -4,6 +4,8 @@ plugins {
 
     id 'org.springframework.boot' version '3.2.4'
     id 'io.spring.dependency-management' version '1.1.4'
+
+    id 'com.bmuschko.docker-remote-api' version '9.4.0'
 }
 
 java {
@@ -37,4 +39,13 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+import com.bmuschko.gradle.docker.tasks.image.*
+
+// TODO: move to common build files
+task buildDockerImage(type: DockerBuildImage) {
+    dependsOn bootJar
+    inputDir = projectDir
+    images = ["$project.group/$project.name:$project.version".toString()]
 }

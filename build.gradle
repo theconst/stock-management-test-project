@@ -1,2 +1,4 @@
-group = 'com.eclub'
-version = '1.0-SNAPSHOT'
+allprojects {
+    group = 'com.eclub'
+    version = '1.0-SNAPSHOT'
+}
