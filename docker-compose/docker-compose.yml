@@ -20,7 +20,7 @@ services:
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
   migration:
-    image: migration:latest
+    image: com.eclub/migration:${MIGRATION_VERSION}
     command: -user=eclub -password=eclub -url=jdbc:postgresql://postgres:5432/${DB} migrate
     depends_on:
       - postgres
