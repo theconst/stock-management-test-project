@@ -9,12 +9,12 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         use = JsonTypeInfo.Id.NAME,
         property = "type")
 @JsonSubTypes({
-        @Type(value = SellMessage.class, name = "SELL"),
-        @Type(value = PurchaseMessage.class, name = "PURCHASE")
+        @Type(value = RemoveFromStockMessage.class, name = "REMOVE_FROM_STOCK"),
+        @Type(value = AddToStockMessage.class, name = "ADD_TO_STOCK")
 })
-public sealed interface StockTransactionMessage permits PurchaseMessage, SellMessage {
+public sealed interface StockTransactionMessage permits AddToStockMessage, RemoveFromStockMessage {
 
     enum Type {
-        PURCHASE, SELL
+        ADD_TO_STOCK, REMOVE_FROM_STOCK
     }
 }

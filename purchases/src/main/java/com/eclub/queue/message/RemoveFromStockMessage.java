@@ -7,9 +7,9 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Value
 @Jacksonized
-public class SellMessage {
+public class RemoveFromStockMessage implements StockTransactionMessage {
     @Builder.Default
-    String type = "SELL"; //TODO(kkovalchuk): probably sales should also work with stock
+    Type type = Type.REMOVE_FROM_STOCK;
 
     Long stockItemId;
     Integer quantity;

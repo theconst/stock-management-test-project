@@ -4,7 +4,7 @@ import com.eclub.dto.SaleDto;
 import com.eclub.mapper.SaleDtoToSellItemMapper;
 import com.eclub.mapper.SaleDtoToSellMessageMapper;
 import com.eclub.queue.SalePublisher;
-import com.eclub.queue.message.SellMessage;
+import com.eclub.queue.message.RemoveFromStockMessage;
 import com.eclub.service.SaleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class SalesController {
 
     @PutMapping("/")
     public Mono<ResponseEntity<Void>> sell(@RequestBody SaleDto sale) {
-        SellMessage sellMessage = saleDtoToSellMessageMapper.map(sale);
+        RemoveFromStockMessage sellMessage = saleDtoToSellMessageMapper.map(sale);
         //TODO(kkovalchuk): flaky
         return saleService.recordSale(saleDtoToSellItemMapper.map(sale))
                 .then(salePublisher.publish(sellMessage))

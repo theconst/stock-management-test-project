@@ -7,9 +7,9 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Value
 @Jacksonized
-public class PurchaseMessage implements StockTransactionMessage {
+public class AddToStockMessage implements StockTransactionMessage {
     @Builder.Default
-    Type type = Type.PURCHASE;
+    Type type = Type.ADD_TO_STOCK;
 
     Long productId;
     Long batchNumber;

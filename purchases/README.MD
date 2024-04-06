@@ -1,6 +1,6 @@
 # Purchases microservice
 
-Microservice for purchase of products and product management
+Microservice for addToStock of products and product management
 
 ## Launching locally
 

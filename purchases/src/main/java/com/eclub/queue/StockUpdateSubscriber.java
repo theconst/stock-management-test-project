@@ -19,7 +19,6 @@ class StockUpdateSubscriber {
     private final StockService stockService;
     private final StockTransactionMessageToStockOperationMapper stockTransactionMessageToStockOperationMapper;
 
-    //TODO(kkovalchuk): should sales also manage stock???????
     @RabbitListener(queues = "${stock-queue.name}")
     public void updateStock(@Payload StockTransactionMessage transaction) {
         log.info("Updating stock with {}", transaction);

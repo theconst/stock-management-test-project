@@ -1,10 +1,10 @@
 package com.eclub.mapper;
 
-import com.eclub.domain.Purchase;
-import com.eclub.domain.Sale;
+import com.eclub.domain.AddToStock;
+import com.eclub.domain.RemoveFromStock;
 import com.eclub.domain.StockOperation;
-import com.eclub.queue.message.PurchaseMessage;
-import com.eclub.queue.message.SellMessage;
+import com.eclub.queue.message.AddToStockMessage;
+import com.eclub.queue.message.RemoveFromStockMessage;
 import com.eclub.queue.message.StockTransactionMessage;
 import org.mapstruct.Mapper;
 
@@ -14,15 +14,15 @@ public interface StockTransactionMessageToStockOperationMapper {
 
     default StockOperation map(StockTransactionMessage transaction) {
         // JAVA21: migrate to switch pattern matching
-        if (transaction instanceof PurchaseMessage pm) {
+        if (transaction instanceof AddToStockMessage pm) {
             return map(pm);
-        } else if (transaction instanceof SellMessage sm) {
+        } else if (transaction instanceof RemoveFromStockMessage sm) {
             return map(sm);
         }
         throw new IllegalArgumentException("Transaction type %s not supported".formatted(transaction));
     }
 
-    Purchase map(PurchaseMessage pm);
+    AddToStock map(AddToStockMessage pm);
 
-    Sale map(SellMessage sm);
+    RemoveFromStock map(RemoveFromStockMessage sm);
 }

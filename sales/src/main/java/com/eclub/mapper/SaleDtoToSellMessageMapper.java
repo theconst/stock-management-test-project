@@ -1,7 +1,7 @@
 package com.eclub.mapper;
 
 import com.eclub.dto.SaleDto;
-import com.eclub.queue.message.SellMessage;
+import com.eclub.queue.message.RemoveFromStockMessage;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -9,5 +9,5 @@ import org.mapstruct.Mapping;
 public interface SaleDtoToSellMessageMapper {
 
     @Mapping(target = "type", ignore = true)
-    SellMessage map(SaleDto sale);
+    RemoveFromStockMessage map(SaleDto sale);
 }

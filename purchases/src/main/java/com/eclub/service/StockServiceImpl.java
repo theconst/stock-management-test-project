@@ -1,6 +1,6 @@
 package com.eclub.service;
 
-import com.eclub.domain.Purchase;
+import com.eclub.domain.AddToStock;
 import com.eclub.domain.StockItem;
 import com.eclub.domain.StockItem.StockItemId;
 import com.eclub.domain.StockOperation;
@@ -70,8 +70,8 @@ class StockServiceImpl implements StockService {
         return result;
     }
 
-    private Mono<StockItemEntity> createNewStockItem(Purchase purchase) {
-        return stockRepository.save(purchaseToStockItemEntityMapper.map(purchase));
+    private Mono<StockItemEntity> createNewStockItem(AddToStock addToStock) {
+        return stockRepository.save(purchaseToStockItemEntityMapper.map(addToStock));
     }
 
     @Override

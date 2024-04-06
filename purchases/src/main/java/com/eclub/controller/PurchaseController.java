@@ -2,7 +2,7 @@ package com.eclub.controller;
 
 
 import com.eclub.dto.PurchaseDto;
-import com.eclub.queue.PurchasePublisher;
+import com.eclub.queue.AddToStockPublisher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +17,11 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class PurchaseController {
     private final PurchaseDtoToPurchaseMessageMapper purchaseDtoToPurchaseMessageMapperMapper;
-    private final PurchasePublisher purchasePublisher;
+    private final AddToStockPublisher addToStockPublisher;
 
     @PutMapping("/")
     public Mono<ResponseEntity<Void>> purchase(@RequestBody PurchaseDto purchase) {
-        return purchasePublisher
+        return addToStockPublisher
                 .publish(purchaseDtoToPurchaseMessageMapperMapper.map(purchase))
                 .thenReturn(ResponseEntity.accepted().build());
     }
