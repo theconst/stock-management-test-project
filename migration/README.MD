@@ -1,9 +1,18 @@
-### Common database
+### Database migration
 
 Database migrations are defined here.
 PostgreSQL is used as a database, although none of its specific features are used.
 
 Note that in latest versions of PostgreSQL permission to use schema like in [script](prepoare_postgres_for_flyway.sql).
+
+#### Building docker image
+
+To build docker image:
+```shell
+../gradlew :migration:jar && docker build -t migration:latest .
+```
+
+#### Launching locally
 
 To use other database either 
 - add additional migration and its dependencies (jdbc driver and the flyway dependency)
