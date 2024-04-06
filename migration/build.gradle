@@ -14,9 +14,6 @@ plugins {
     id 'org.flywaydb.flyway' version "$flywayVersion"
 }
 
-group = 'com.eclub'
-version = '1.0-SNAPSHOT'
-
 flyway {
     def environment = System.getenv()
     url = environment['DB_URL']
