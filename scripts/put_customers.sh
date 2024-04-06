@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-CUSTOMERS_ENDPOINT="${CUSTOMERS_ENDPOINT:-localhost:8081/customers/}"
+CUSTOMERS_ENDPOINT="${CUSTOMERS_ENDPOINT:-localhost:8085/customers/}"
 
 curl -XPOST "$CUSTOMERS_ENDPOINT" \
   -H 'Content-Type: application/json' \
