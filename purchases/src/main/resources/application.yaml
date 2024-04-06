@@ -5,8 +5,8 @@ spring:
     host: ${RABBIT_HOST}
 
 db:
-  name: eclub
-  username: eclub
+  name: ${DB}
+  username: ${DB_USER}
   password: ${DB_PASSWORD}
   host: ${DB_HOST}
 

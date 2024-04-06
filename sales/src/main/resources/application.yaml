@@ -12,8 +12,8 @@ server:
   port: 8081
 
 db:
-  name: eclub
-  username: eclub
+  name: ${DB}
+  username: ${DB_USER}
   password: ${DB_PASSWORD}
   host: ${DB_HOST}
 
