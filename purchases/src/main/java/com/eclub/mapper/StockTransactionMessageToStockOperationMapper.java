@@ -7,6 +7,7 @@ import com.eclub.queue.message.AddToStockMessage;
 import com.eclub.queue.message.RemoveFromStockMessage;
 import com.eclub.queue.message.StockTransactionMessage;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(uses = {ProductIdMapper.class, BatchNumberMapper.class, StockItemIdMapper.class},
         config = MappingConfiguration.class)
@@ -22,7 +23,9 @@ public interface StockTransactionMessageToStockOperationMapper {
         throw new IllegalArgumentException("Transaction type %s not supported".formatted(transaction));
     }
 
-    AddToStock map(AddToStockMessage pm);
+    @Mapping(target = "operationId", source = "messageId")
+    AddToStock map(AddToStockMessage addToStockMessage);
 
-    RemoveFromStock map(RemoveFromStockMessage sm);
+    @Mapping(target = "operationId", source = "messageId")
+    RemoveFromStock map(RemoveFromStockMessage removeFromStockMessage);
 }

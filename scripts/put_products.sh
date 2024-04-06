@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PRODUCTS_ENDPOINT_URL="${PRODUCTS_ENDPOINT_URL:-localhost:8086/products}"
+PRODUCTS_ENDPOINT_URL="${PRODUCTS_ENDPOINT_URL:-localhost:8080/products}"
 
 curl -XPOST "$PRODUCTS_ENDPOINT_URL" \
   -H 'Content-Type: application/json' \

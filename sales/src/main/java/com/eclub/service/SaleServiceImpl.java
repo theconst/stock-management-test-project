@@ -1,9 +1,8 @@
 package com.eclub.service;
 
+import com.eclub.domain.SaleItem;
 import com.eclub.mapper.SaleItemEntityToSaleItemMapper;
 import com.eclub.mapper.SaleItemToSaleItemEntityMapper;
-import com.eclub.domain.SaleItem;
-import com.eclub.repository.CustomerRepository;
 import com.eclub.repository.SaleItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 class SaleServiceImpl implements SaleService {
     private final SaleItemRepository saleItemRepository;
-    private final CustomerRepository customerRepository;
     private final SaleItemToSaleItemEntityMapper saleItemToSaleItemEntityMapper;
     private final SaleItemEntityToSaleItemMapper saleItemEntityToSaleItemMapper;
 

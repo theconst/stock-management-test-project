@@ -10,6 +10,7 @@ import lombok.extern.jackson.Jacksonized;
 public class RemoveFromStockMessage {
     @Builder.Default
     String type = "REMOVE_FROM_STOCK";
+    String messageId;
     Long stockItemId;
     Integer quantity;
 }
