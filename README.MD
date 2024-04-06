@@ -10,7 +10,7 @@ _This is just a description of the task as state in the presentation, feel free 
 - [x] Use a message queue (RabbitMQ) to add the purchased products to the stock available in the warehouse.
 #### Microservices for the product sales
 - [x] Implement a REST API for creating clients (customers).
-- [] Implement a REST API for the sale of products.
+- [x] Implement a REST API for the sale of products.
 - [x] Use a message queue (RabbitMQ) to subtract the products sold from the stock available in the warehouse.
 #### Shared database
 - [x] Both microservices must use the same database to manage the product information.
