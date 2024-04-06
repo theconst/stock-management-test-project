@@ -46,8 +46,10 @@ To deploy via docker compose you will need `docker` and `docker-compose` install
     ```
 2. Setup [migration](migration/README.MD) and launch the migration to prepare database.
 3. Verify RabbitMQ is running. In this project default guest access is used.
-4. Launch [sales](sales/README.MD).
-5. Launch [purchases](purchases/README.MD).
+4. Launch [sales](sales/README.MD). Do not forget to change the port with `-Dserver.port=8081`
+5. Launch [purchases](purchases/README.MD). 
+
+There are run configurations for IntelliJ Idea in `.run` defined for convenience.
 
 ### Deployment using `docker-compose`
 

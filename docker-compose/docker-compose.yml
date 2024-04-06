@@ -25,9 +25,9 @@ services:
     depends_on:
       - postgres
   sales:
-    image: com.eclub/purchases:${PURCHASES_VERSION}
+    image: com.eclub/sales:${PURCHASES_VERSION}
     ports:
-      - 8085:8081
+      - 8085:8080
     environment:
       - DB=${DB}
       - DB_USER=${DB_USER}

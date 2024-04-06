@@ -8,9 +8,6 @@ spring:
       direct:
         default-requeue-rejected: false
 
-server:
-  port: 8081
-
 db:
   name: ${DB}
   username: ${DB_USER}
