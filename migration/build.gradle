@@ -12,6 +12,7 @@ buildscript {
 plugins {
     id 'java'
     id 'org.flywaydb.flyway' version "$flywayVersion"
+    id 'com.bmuschko.docker-remote-api'
 }
 
 flyway {
@@ -19,4 +20,10 @@ flyway {
     url = environment['DB_URL']
     user = environment['DB_USER'] ?: 'eclub'
     password = environment['DB_PASSWORD']
+}
+
+import com.bmuschko.gradle.docker.tasks.image.*
+task buildDockerImage(type: DockerBuildImage) {
+    inputDir = projectDir
+    images = ["$project.group/$project.name:$project.version".toString()]
 }
