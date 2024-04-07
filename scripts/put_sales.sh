@@ -1,4 +1,4 @@
-SALES_ENDPOINT="${SALES_ENDPOINT:-localhost:8081/sales/}"
+SALES_ENDPOINT="${SALES_ENDPOINT:-localhost:8085/sales/}"
 
 curl -XPUT "${SALES_ENDPOINT}" \
   -H 'Content-Type: application/json' \
