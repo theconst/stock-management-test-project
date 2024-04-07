@@ -1,7 +1,7 @@
 package com.eclub.mapper;
 
 import com.eclub.domain.AddToStock;
-import com.eclub.queue.message.AddToStockMessage;
+import com.eclub.message.AddToStockMessage;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

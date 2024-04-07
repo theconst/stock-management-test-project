@@ -1,4 +1,4 @@
-package com.eclub.queue.message;
+package com.eclub.message;
 
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @Type(value = RemoveFromStockMessage.class, name = "REMOVE_FROM_STOCK"),
         @Type(value = AddToStockMessage.class, name = "ADD_TO_STOCK")
 })
-public sealed interface StockTransactionMessage permits AddToStockMessage, RemoveFromStockMessage {
+public sealed interface StockOperationMessage permits AddToStockMessage, RemoveFromStockMessage {
 
     enum Type {
         ADD_TO_STOCK, REMOVE_FROM_STOCK

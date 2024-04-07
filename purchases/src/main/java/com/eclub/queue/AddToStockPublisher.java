@@ -1,6 +1,6 @@
 package com.eclub.queue;
 
-import com.eclub.queue.message.AddToStockMessage;
+import com.eclub.message.AddToStockMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
