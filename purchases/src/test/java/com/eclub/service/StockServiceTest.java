@@ -2,7 +2,6 @@ package com.eclub.service;
 
 import com.eclub.ServiceTest;
 import com.eclub.domain.*;
-import com.eclub.domain.Product.ProductId;
 import com.eclub.domain.StockItem.BatchNumber;
 import com.eclub.domain.StockItem.StockItemId;
 import com.eclub.domain.StockOperation.OperationId;
@@ -15,6 +14,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.test.annotation.DirtiesContext;
 
+import static com.eclub.service.Products.IDEA_PAD;
+import static com.eclub.service.Products.MACBOOK;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
@@ -24,27 +25,11 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.*;
 @ServiceTest
 class StockServiceTest {
     static final OperationId OPERATION_ID_1 = new OperationId("random-uiid");
-    static final ProductId PRODUCT_ID_1 = new ProductId(1L);
-    static final ProductId PRODUCT_ID_2 = new ProductId(2L);
     static final StockItemId STOCK_ITEM_ID_1 = new StockItemId(1);
     static final StockItemId STOCK_ITEM_ID_2 = new StockItemId(2);
     static final BatchNumber BATCH_NUMBER_1 = new BatchNumber(1L);
     static final BatchNumber BATCH_NUMBER_2 = new BatchNumber(2);
     static final int QUANTITY = 1;
-
-    static final Product IDEA_PAD = Product.builder()
-            .id(PRODUCT_ID_1)
-            .name("Lenovo IdeaPad")
-            .vendor("Lenovo")
-            .description("Cheap laptop")
-            .build();
-
-    static final Product MACBOOK = Product.builder()
-            .id(PRODUCT_ID_2)
-            .name("Macbook M3")
-            .vendor("Apple")
-            .description("Expensive laptop")
-            .build();
 
     static final StockItem IDEA_PAD_STOCK = StockItem.builder()
             .id(STOCK_ITEM_ID_1)
@@ -61,7 +46,7 @@ class StockServiceTest {
 
     static final StockOperation ADD_TO_STOCK = AddToStock.builder()
             .operationId(OPERATION_ID_1)
-            .productId(PRODUCT_ID_1)
+            .productId(Products.PRODUCT_ID_1)
             .batchNumber(BATCH_NUMBER_1)
             .quantity(QUANTITY)
             .build();
