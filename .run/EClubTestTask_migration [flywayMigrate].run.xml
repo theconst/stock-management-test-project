@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="EClubTestTask:database [flywayMigrate]" type="GradleRunConfiguration" factoryName="Gradle">
+  <configuration default="false" name="EClubTestTask:migration [flywayMigrate]" type="GradleRunConfiguration" factoryName="Gradle">
     <ExternalSystemSettings>
       <option name="env">
         <map>
@@ -9,7 +9,7 @@
         </map>
       </option>
       <option name="executionName" />
-      <option name="externalProjectPath" value="$PROJECT_DIR$/database" />
+      <option name="externalProjectPath" value="$PROJECT_DIR$/migration" />
       <option name="externalSystemIdString" value="GRADLE" />
       <option name="scriptParameters" value="" />
       <option name="taskDescriptions">
