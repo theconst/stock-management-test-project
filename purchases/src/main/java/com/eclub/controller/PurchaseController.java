@@ -1,18 +1,18 @@
 package com.eclub.controller;
 
 
-import com.eclub.dto.StockOperationIdDto;
+import com.eclub.dto.StockOperationStatusDto;
 import com.eclub.dto.PurchaseDto;
 import com.eclub.queue.AddToStockPublisher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
+
+import static com.eclub.dto.StockOperationStatusDto.Status.PENDING;
 
 @RestController
 @RequestMapping("purchases")
@@ -22,10 +22,11 @@ public class PurchaseController {
     private final AddToStockPublisher addToStockPublisher;
 
     @PutMapping("/")
-    public Mono<StockOperationIdDto> purchase(@RequestBody PurchaseDto purchase) {
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public Mono<StockOperationStatusDto> purchase(@RequestBody PurchaseDto purchase) {
         String messageId = UUID.randomUUID().toString();
         return addToStockPublisher
                 .publish(purchaseDtoToAddToStockMessageMapperMapper.map(purchase, messageId))
-                .thenReturn(new StockOperationIdDto(messageId));
+                .thenReturn(new StockOperationStatusDto(messageId, PENDING));
     }
 }

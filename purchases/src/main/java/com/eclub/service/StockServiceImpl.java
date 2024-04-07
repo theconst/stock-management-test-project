@@ -1,31 +1,41 @@
 package com.eclub.service;
 
 import com.eclub.domain.AddToStock;
+import com.eclub.domain.RemoveFromStock;
 import com.eclub.domain.StockItem;
 import com.eclub.domain.StockItem.StockItemId;
 import com.eclub.domain.StockOperation;
 import com.eclub.entity.StockItemEntity;
+import com.eclub.entity.StockOperationEntity;
 import com.eclub.mapper.*;
 import com.eclub.repository.ProductRepository;
+import com.eclub.repository.StockOperationRepository;
 import com.eclub.repository.StockRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+
 @Service
+@Slf4j
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 class StockServiceImpl implements StockService {
     private final ProductRepository productRepository;
     private final StockRepository stockRepository;
+    private final StockOperationRepository stockOperationRepository;
 
     private final ProductIdMapper productIdMapper;
     private final StockItemIdMapper stockItemIdMapper;
     private final BatchNumberMapper batchNumberMapper;
     private final StockItemEntityToStockItemMapper stockItemEntityToStockItemMapper;
-    private final PurchaseToStockItemEntityMapper purchaseToStockItemEntityMapper;
+    private final AddToStockToStockItemMapper addToStockToAddToStockItemMapper;
+    private final OperationIdMapper operationIdMapper;
 
     @Override
     @Transactional
@@ -36,28 +46,65 @@ class StockServiceImpl implements StockService {
     }
 
     @Override
-    @Transactional                                                        //TODO(kkovalchuk): verify indeed transaction
+    @Transactional
     public Mono<StockItem> update(StockOperation stockOperation) {
-        return stockOperation.match(
-                        purchase -> stockRepository.findByBatchNumberAndProductId(
-                            batchNumberMapper.map(purchase.batchNumber()),
-                            productIdMapper.map(purchase.productId())),
-                        sell -> stockRepository.findById(stockItemIdMapper.map(sell.stockItemId())))
-                .doOnNext(stockItemEntity -> {
-                    int inStock = stockItemEntity.getQuantity();
-                    int newQuantity = stockOperation.match(
-                            purchase -> inStock + purchase.quantity(),
-                            sale -> subtractFromStock(inStock, sale.quantity()));
+        return stockOperationRepository.findById(operationIdMapper.map(stockOperation.operationId()))
+                .flatMap(operation -> {
 
-                    //TODO(kkovalchuk): try immutable entities
-                    stockItemEntity.setQuantity(newQuantity);
+                    log.info("Operation with id [{}] already processed", operation.getOperationId());
+
+                    return getStockItem(stockOperation)
+                            .switchIfEmpty(itemUnavailableError(operation));
                 })
-                .flatMap(stockRepository::save)
-                .switchIfEmpty(stockOperation.match(
-                        this::createNewStockItem,
-                        sale -> Mono.error(new IllegalStateException(
-                                "Cannot sale non existing stock item [%s]".formatted(stockOperation)))))
+                .switchIfEmpty(Mono.defer(() -> processOperation(stockOperation)))
                 .flatMap(this::assembleStockItem);
+    }
+
+    private Mono<StockItemEntity> processOperation(StockOperation stockOperation) {
+        var operationId = operationIdMapper.map(stockOperation.operationId());
+
+        log.info("Processing operation with id [{}]", operationId);
+
+        return stockOperationRepository.save(new StockOperationEntity(operationId, ZonedDateTime.now(ZoneId.of("UTC"))))
+                .then(getStockItem(stockOperation)
+                        .doOnNext(stockItemEntity -> doUpdateStock(stockItemEntity, stockOperation))
+                        .flatMap(stockRepository::save)
+                        .switchIfEmpty(tryCreateStockItem(stockOperation)));
+    }
+
+    private static Mono<StockItemEntity> itemUnavailableError(StockOperationEntity operation) {
+        return Mono.error(new IllegalStateException("Stock item for %s already unavailable".formatted(operation)));
+    }
+
+    private Mono<StockItemEntity> tryCreateStockItem(StockOperation stockOperation) {
+        return stockOperation.match(
+                this::createNewStockItem,
+                remove -> Mono.error(new IllegalStateException(
+                        "Cannot sale non existing stock item [%s]".formatted(stockOperation))));
+    }
+
+    private static void doUpdateStock(StockItemEntity stockItemEntity, StockOperation stockOperation) {
+        int inStock = stockItemEntity.getQuantity();
+        int newQuantity = stockOperation.match(
+                add -> inStock + add.quantity(),
+                remove -> subtractFromStock(inStock, remove.quantity()));
+
+        //TODO(kkovalchuk): try immutable entities
+        stockItemEntity.setQuantity(newQuantity);
+    }
+
+    private Mono<StockItemEntity> getStockItem(StockOperation stockOperation) {
+        return stockOperation.match(this::getStockItem, this::getStockItem);
+    }
+
+    private Mono<StockItemEntity> getStockItem(RemoveFromStock removeFromStock) {
+        return stockRepository.findById(stockItemIdMapper.map(removeFromStock.stockItemId()));
+    }
+
+    private Mono<StockItemEntity> getStockItem(AddToStock addToStock) {
+        return stockRepository.findByBatchNumberAndProductId(
+                batchNumberMapper.map(addToStock.batchNumber()),
+                productIdMapper.map(addToStock.productId()));
     }
 
     private static int subtractFromStock(int inStock, int quantity) {
@@ -71,7 +118,7 @@ class StockServiceImpl implements StockService {
     }
 
     private Mono<StockItemEntity> createNewStockItem(AddToStock addToStock) {
-        return stockRepository.save(purchaseToStockItemEntityMapper.map(addToStock));
+        return stockRepository.save(addToStockToAddToStockItemMapper.map(addToStock));
     }
 
     @Override

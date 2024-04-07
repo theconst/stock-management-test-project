@@ -6,6 +6,8 @@ import com.eclub.domain.StockOperation;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Optional;
+
 public interface StockService {
     Mono<StockItem> getStockItem(StockItemId stockItemId);
 

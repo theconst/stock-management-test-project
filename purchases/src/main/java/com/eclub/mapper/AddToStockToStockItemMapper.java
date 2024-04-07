@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(uses = {BatchNumberMapper.class, ProductIdMapper.class}, config = MappingConfiguration.class)
-public interface PurchaseToStockItemEntityMapper {
+public interface AddToStockToStockItemMapper {
     @Mapping(target = "stockItemId", ignore = true)
     StockItemEntity map(AddToStock purchase);
 }

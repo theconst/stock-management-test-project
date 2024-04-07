@@ -1,4 +1,4 @@
-PURCHASES_URL="${PURCHASES_URL:-localhost:8086/purchases/}"
+PURCHASES_URL="${PURCHASES_URL:-localhost:8080/purchases/}"
 
 curl -XPUT "${PURCHASES_URL}" \
   -H 'Content-Type: application/json' \
