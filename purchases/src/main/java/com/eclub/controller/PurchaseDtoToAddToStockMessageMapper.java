@@ -9,6 +9,6 @@ import org.mapstruct.Mapping;
 @Mapper(config = MappingConfiguration.class)
 public interface PurchaseDtoToAddToStockMessageMapper {
 
-    @Mapping(target = "type", expression = "java(com.eclub.domain.message.StockTransactionMessage.Type.ADD_TO_STOCK)")
+    @Mapping(target = "type", expression = "java(com.eclub.message.StockOperationMessage.Type.ADD_TO_STOCK)")
     AddToStockMessage map(PurchaseDto dto, String messageId);
 }

@@ -1,6 +1,6 @@
 package com.eclub.queue;
 
-import com.eclub.queue.message.RemoveFromStockMessage;
+import com.eclub.message.RemoveFromStockMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

@@ -1,4 +1,4 @@
-package com.eclub.queue.message;
+package com.eclub.message;
 
 import lombok.Builder;
 import lombok.Value;

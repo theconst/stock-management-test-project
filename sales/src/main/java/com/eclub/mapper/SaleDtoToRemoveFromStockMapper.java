@@ -1,7 +1,7 @@
 package com.eclub.mapper;
 
 import com.eclub.dto.SaleDto;
-import com.eclub.queue.message.RemoveFromStockMessage;
+import com.eclub.message.RemoveFromStockMessage;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

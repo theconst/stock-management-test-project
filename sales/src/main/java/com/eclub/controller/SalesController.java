@@ -5,7 +5,7 @@ import com.eclub.dto.StockOperationIdDto;
 import com.eclub.mapper.SaleDtoToRemoveFromStockMapper;
 import com.eclub.mapper.SaleDtoToSellItemMapper;
 import com.eclub.queue.SalePublisher;
-import com.eclub.queue.message.RemoveFromStockMessage;
+import com.eclub.message.RemoveFromStockMessage;
 import com.eclub.service.SaleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
