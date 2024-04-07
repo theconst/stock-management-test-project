@@ -9,10 +9,10 @@ import com.eclub.mapper.StockItemToStockItemDtoMapper;
 import com.eclub.service.StockService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -38,11 +38,12 @@ public class StockController {
                 .map(exists -> exists ? StockOperationStatusDto.processed(id) : StockOperationStatusDto.pending(id));
     }
 
-    //TODO(kkovalchuk): pagination
     @GetMapping("/")
-    public Flux<StockItemDto> listAllStockItems() {
+    public Mono<Page<StockItemDto>> listAllStockItems(
+            @RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize) {
         return stockService
-                .listStock()
-                .map(stockItemToStockItemDtoMapper::map);
+                .listStock(PageRequest.of(pageNumber, pageSize))
+                .map(p -> p.map(stockItemToStockItemDtoMapper::map));
     }
 }

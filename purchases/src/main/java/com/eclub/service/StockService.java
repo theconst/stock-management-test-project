@@ -3,10 +3,10 @@ package com.eclub.service;
 import com.eclub.domain.StockItem;
 import com.eclub.domain.StockItem.StockItemId;
 import com.eclub.domain.StockOperation;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.Optional;
 
 public interface StockService {
     Mono<StockItem> getStockItem(StockItemId stockItemId);
@@ -15,5 +15,5 @@ public interface StockService {
 
     Mono<Boolean> isOperationProcessed(StockOperation.OperationId id);
 
-    Flux<StockItem> listStock();
+    Mono<Page<StockItem>> listStock(PageRequest pageRequest);
 }

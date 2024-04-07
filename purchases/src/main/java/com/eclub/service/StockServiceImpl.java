@@ -1,10 +1,7 @@
 package com.eclub.service;
 
-import com.eclub.domain.AddToStock;
-import com.eclub.domain.RemoveFromStock;
-import com.eclub.domain.StockItem;
+import com.eclub.domain.*;
 import com.eclub.domain.StockItem.StockItemId;
-import com.eclub.domain.StockOperation;
 import com.eclub.entity.StockItemEntity;
 import com.eclub.entity.StockOperationEntity;
 import com.eclub.mapper.*;
@@ -14,6 +11,10 @@ import com.eclub.repository.StockRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
@@ -94,7 +95,6 @@ class StockServiceImpl implements StockService {
                 add -> inStock + add.quantity(),
                 remove -> subtractFromStock(inStock, remove.quantity()));
 
-        //TODO(kkovalchuk): try immutable entities
         stockItemEntity.setQuantity(newQuantity);
     }
 
@@ -127,10 +127,12 @@ class StockServiceImpl implements StockService {
     }
 
     @Override
-    public Flux<StockItem> listStock() {
+    public Mono<Page<StockItem>> listStock(PageRequest page) {
         return stockRepository
-                .findAll()
-                .flatMap(this::assembleStockItem);
+                .findAllByOrderByStockItemId(page)
+                .flatMap(this::assembleStockItem)
+                .collectList()
+                .map(result -> new PageImpl<>(result, page, result.size()));
     }
 
     private Mono<StockItem> assembleStockItem(StockItemEntity stockItem) {
