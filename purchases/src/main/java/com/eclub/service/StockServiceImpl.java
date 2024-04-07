@@ -60,6 +60,11 @@ class StockServiceImpl implements StockService {
                 .flatMap(this::assembleStockItem);
     }
 
+    @Override
+    public Mono<Boolean> isOperationProcessed(StockOperation.OperationId id) {
+        return stockOperationRepository.existsById(operationIdMapper.map(id));
+    }
+
     private Mono<StockItemEntity> processOperation(StockOperation stockOperation) {
         var operationId = operationIdMapper.map(stockOperation.operationId());
 

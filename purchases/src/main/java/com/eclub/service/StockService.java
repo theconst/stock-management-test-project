@@ -13,5 +13,7 @@ public interface StockService {
 
     Mono<StockItem> update(StockOperation purchase);
 
+    Mono<Boolean> isOperationProcessed(StockOperation.OperationId id);
+
     Flux<StockItem> listStock();
 }
