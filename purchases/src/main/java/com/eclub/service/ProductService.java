@@ -2,7 +2,8 @@ package com.eclub.service;
 
 import com.eclub.domain.Product;
 import com.eclub.domain.Product.ProductId;
-import reactor.core.publisher.Flux;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import reactor.core.publisher.Mono;
 
 public interface ProductService {
@@ -11,5 +12,5 @@ public interface ProductService {
 
     Mono<Product> upsertProduct(Product product);
 
-    Flux<Product> listProducts();
+    Mono<Page<Product>> listProducts(PageRequest pageRequest);
 }

@@ -7,6 +7,8 @@ import com.eclub.mapper.ProductToProductDtoMapper;
 import com.eclub.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -28,12 +30,13 @@ public class ProductController {
                 .map(productToProductDtoMapper::map);
     }
 
-    //TODO(kkovalchuk): pagination
     @GetMapping("/")
-    public Flux<ProductDto> listAllProducts() {
+    public Mono<Page<ProductDto>> listAllProducts(
+            @RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize) {
         return productService
-                .listProducts()
-                .map(productToProductDtoMapper::map);
+                .listProducts(PageRequest.of(pageNumber, pageSize))
+                .map(page -> page.map(productToProductDtoMapper::map));
     }
 
     @PostMapping

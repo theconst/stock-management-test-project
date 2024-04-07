@@ -8,8 +8,10 @@ import com.eclub.mapper.ProductToProductEntityMapper;
 import com.eclub.repository.ProductRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -35,9 +37,11 @@ class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Flux<Product> listProducts() {
+    public Mono<Page<Product>> listProducts(PageRequest pageRequest) {
         return productRepository
-                .findAll()
-                .map(productEntityToProductMapper::map);
+                .findAllByOrderByProductId(pageRequest)
+                .map(productEntityToProductMapper::map)
+                .collectList()
+                .map(page -> new PageImpl<>(page, pageRequest, page.size()));
     }
 }

@@ -127,12 +127,12 @@ class StockServiceImpl implements StockService {
     }
 
     @Override
-    public Mono<Page<StockItem>> listStock(PageRequest page) {
+    public Mono<Page<StockItem>> listStock(PageRequest pageRequest) {
         return stockRepository
-                .findAllByOrderByStockItemId(page)
+                .findAllByOrderByStockItemId(pageRequest)
                 .flatMap(this::assembleStockItem)
                 .collectList()
-                .map(result -> new PageImpl<>(result, page, result.size()));
+                .map(page -> new PageImpl<>(page, pageRequest, page.size()));
     }
 
     private Mono<StockItem> assembleStockItem(StockItemEntity stockItem) {
