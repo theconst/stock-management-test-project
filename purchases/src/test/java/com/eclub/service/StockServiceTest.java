@@ -6,9 +6,12 @@ import com.eclub.domain.Product.ProductId;
 import com.eclub.domain.StockItem.BatchNumber;
 import com.eclub.domain.StockItem.StockItemId;
 import com.eclub.domain.StockOperation.OperationId;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.test.annotation.DirtiesContext;
 
@@ -19,51 +22,103 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 
 @ServiceTest
 class StockServiceTest {
+    static final OperationId OPERATION_ID_1 = new OperationId("random-uiid");
+    static final ProductId PRODUCT_ID_1 = new ProductId(1L);
+    static final ProductId PRODUCT_ID_2 = new ProductId(2L);
+    static final StockItemId STOCK_ITEM_ID_1 = new StockItemId(1);
+    static final StockItemId STOCK_ITEM_ID_2 = new StockItemId(2);
+    static final BatchNumber BATCH_NUMBER_1 = new BatchNumber(1L);
+    static final BatchNumber BATCH_NUMBER_2 = new BatchNumber(2);
+    static final int QUANTITY = 1;
+
+    static final Product IDEA_PAD = Product.builder()
+            .id(PRODUCT_ID_1)
+            .name("Lenovo IdeaPad")
+            .vendor("Lenovo")
+            .description("Cheap laptop")
+            .build();
+
+    static final Product MACBOOK = Product.builder()
+            .id(PRODUCT_ID_2)
+            .name("Macbook M3")
+            .vendor("Apple")
+            .description("Expensive laptop")
+            .build();
+
+    static final StockItem IDEA_PAD_STOCK = StockItem.builder()
+            .id(STOCK_ITEM_ID_1)
+            .product(IDEA_PAD)
+            .batchNumber(BATCH_NUMBER_1)
+            .quantity(QUANTITY)
+            .build();
+    static final StockItem MACBOOK_STOCK = StockItem.builder()
+            .id(STOCK_ITEM_ID_2)
+            .product(MACBOOK)
+            .batchNumber(BATCH_NUMBER_2)
+            .quantity(QUANTITY)
+            .build();
+
+    static final StockOperation ADD_TO_STOCK = AddToStock.builder()
+            .operationId(OPERATION_ID_1)
+            .productId(PRODUCT_ID_1)
+            .batchNumber(BATCH_NUMBER_1)
+            .quantity(QUANTITY)
+            .build();
+
+    static final StockOperation REMOVE_FROM_STOCK = RemoveFromStock.builder()
+            .stockItemId(STOCK_ITEM_ID_1)
+            .operationId(OPERATION_ID_1)
+            .quantity(QUANTITY)
+            .build();
+
+    static final StockOperation REMOVE_FROM_STOCK_TOO_MANY = RemoveFromStock.builder()
+            .stockItemId(STOCK_ITEM_ID_1)
+            .operationId(OPERATION_ID_1)
+            .quantity(100 * QUANTITY)
+            .build();
+
     @Autowired DatabaseClient databaseClient;
     @Autowired StockService stockService;
 
     @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    class StockListTest {
+
+        @BeforeAll
+        void setUp() {
+            insertProduct(IDEA_PAD);
+            insertStock(IDEA_PAD_STOCK);
+
+            insertProduct(MACBOOK);
+            insertStock(MACBOOK_STOCK);
+        }
+
+        @Test
+        void shouldGetStockItemById() {
+            var stockItem = stockService.getStockItem(STOCK_ITEM_ID_1).block();
+
+            assertThat(stockItem).isEqualTo(IDEA_PAD_STOCK);
+        }
+
+        @Test
+        void shouldPaginateThroughStock() {
+            var page1 = stockService.listStock(PageRequest.of(0, 1)).block();
+            var page2 = stockService.listStock(PageRequest.of(1, 1)).block();
+
+            assertThat(page1.getTotalPages()).isEqualTo(2);
+            assertThat(page1).hasSize(1);
+            assertThat(page1).containsExactly(IDEA_PAD_STOCK);
+
+            assertThat(page1.getTotalPages()).isEqualTo(2);
+            assertThat(page2).hasSize(1);
+            assertThat(page2).containsExactly(MACBOOK_STOCK);
+        }
+
+    }
+
+    @Nested
     @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
     class StockUpdateTest {
-        static final OperationId OPERATION_ID_1 = new OperationId("random-uiid");
-        static final ProductId PRODUCT_ID_1 = new ProductId(1L);
-        static final StockItemId STOCK_ITEM_ID_1 = new StockItemId(1);
-        static final BatchNumber BATCH_NUMBER_1 = new BatchNumber(1L);
-
-        static final int QUANTITY = 1;
-
-        static final Product IDEA_PAD = Product.builder()
-                .id(PRODUCT_ID_1)
-                .name("Lenovo IdeaPad")
-                .vendor("Lenovo")
-                .description("Cheap laptop")
-                .build();
-
-        static final StockItem IDEA_PAD_STOCK = StockItem.builder()
-                .id(STOCK_ITEM_ID_1)
-                .product(IDEA_PAD)
-                .batchNumber(BATCH_NUMBER_1)
-                .quantity(QUANTITY)
-                .build();
-
-        static final StockOperation ADD_TO_STOCK = AddToStock.builder()
-                .operationId(OPERATION_ID_1)
-                .productId(PRODUCT_ID_1)
-                .batchNumber(BATCH_NUMBER_1)
-                .quantity(QUANTITY)
-                .build();
-
-        static final StockOperation REMOVE_FROM_STOCK = RemoveFromStock.builder()
-                .stockItemId(STOCK_ITEM_ID_1)
-                .operationId(OPERATION_ID_1)
-                .quantity(QUANTITY)
-                .build();
-
-        static final StockOperation REMOVE_FROM_STOCK_TOO_MANY = RemoveFromStock.builder()
-                .stockItemId(STOCK_ITEM_ID_1)
-                .operationId(OPERATION_ID_1)
-                .quantity(100 * QUANTITY)
-                .build();
 
         @Test
         void shouldCreateNewStockItemIfItemIsAddedToStockAndTheProductExists() {

@@ -54,7 +54,7 @@ class StockServiceImpl implements StockService {
         return stockRepository
                 .findAllByOrderByStockItemId(pageRequest)
                 .flatMap(this::assembleStockItem)
-                .transform(collectPages(pageRequest))
+                .transform(collectPages(pageRequest, stockRepository::count))
                 .single();
     }
 
