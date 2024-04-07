@@ -7,12 +7,10 @@ spring:
       direct:
         default-requeue-rejected: false
     host: ${RABBIT_HOST}
-
-db:
-  name: ${DB}
-  username: ${DB_USER}
-  password: ${DB_PASSWORD}
-  host: ${DB_HOST}
+  r2dbc:
+    url: r2dbc:postgresql://${DB_HOST}/${DB}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
 
 stock-queue:
   name: stock.transactions

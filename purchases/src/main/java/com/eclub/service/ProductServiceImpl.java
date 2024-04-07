@@ -9,18 +9,20 @@ import com.eclub.repository.ProductRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import static com.eclub.util.PagingCollector.collectPages;
+
 @Service
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 class ProductServiceImpl implements ProductService {
+    private final ProductRepository productRepository;
+
     private final ProductIdMapper productIdMapper;
     private final ProductEntityToProductMapper productEntityToProductMapper;
     private final ProductToProductEntityMapper productToProductEntityMapper;
-    private final ProductRepository productRepository;
 
     @Override
     public Mono<Product> getProduct(ProductId id) {
@@ -41,7 +43,7 @@ class ProductServiceImpl implements ProductService {
         return productRepository
                 .findAllByOrderByProductId(pageRequest)
                 .map(productEntityToProductMapper::map)
-                .collectList()
-                .map(page -> new PageImpl<>(page, pageRequest, page.size()));
+                .transform(collectPages(pageRequest))
+                .single();
     }
 }

@@ -7,11 +7,11 @@ import com.eclub.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import static com.eclub.util.PagingCollector.collectPages;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -28,12 +28,12 @@ class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Mono<Page<Customer>> listCustomers(PageRequest page) {
+    public Mono<Page<Customer>> listCustomers(PageRequest pageRequest) {
         return customerRepository
-                .findAllByOrderByCustomerId(page)
+                .findAllByOrderByCustomerId(pageRequest)
                 .map(customerEntityToCustomerMapper::map)
-                .collectList()
-                .map(result -> new PageImpl<>(result, page, result.size()));
+                .transform(collectPages(pageRequest))
+                .single();
     }
 
     @Override

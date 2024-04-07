@@ -1,7 +1,10 @@
 package com.eclub.service;
 
-import com.eclub.domain.*;
+import com.eclub.domain.AddToStock;
+import com.eclub.domain.RemoveFromStock;
+import com.eclub.domain.StockItem;
 import com.eclub.domain.StockItem.StockItemId;
+import com.eclub.domain.StockOperation;
 import com.eclub.entity.StockItemEntity;
 import com.eclub.entity.StockOperationEntity;
 import com.eclub.mapper.*;
@@ -12,16 +15,16 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+
+import static com.eclub.util.PagingCollector.collectPages;
 
 @Service
 @Slf4j
@@ -71,11 +74,13 @@ class StockServiceImpl implements StockService {
 
         log.info("Processing operation with id [{}]", operationId);
 
-        return stockOperationRepository.save(StockOperationEntity.of(operationId, ZonedDateTime.now(ZoneId.of("UTC"))))
-                .then(getStockItem(stockOperation)
+        return Mono.zip(
+                stockOperationRepository.save(StockOperationEntity.of(operationId, ZonedDateTime.now(ZoneId.of("UTC")))),
+                getStockItem(stockOperation)
                         .doOnNext(stockItemEntity -> doUpdateStock(stockItemEntity, stockOperation))
                         .flatMap(stockRepository::save)
-                        .switchIfEmpty(tryCreateStockItem(stockOperation)));
+                        .switchIfEmpty(tryCreateStockItem(stockOperation)))
+                .map(Tuple2::getT2);
     }
 
     private static Mono<StockItemEntity> itemUnavailableError(StockOperationEntity operation) {
@@ -131,8 +136,8 @@ class StockServiceImpl implements StockService {
         return stockRepository
                 .findAllByOrderByStockItemId(pageRequest)
                 .flatMap(this::assembleStockItem)
-                .collectList()
-                .map(page -> new PageImpl<>(page, pageRequest, page.size()));
+                .transform(collectPages(pageRequest))
+                .single();
     }
 
     private Mono<StockItem> assembleStockItem(StockItemEntity stockItem) {
