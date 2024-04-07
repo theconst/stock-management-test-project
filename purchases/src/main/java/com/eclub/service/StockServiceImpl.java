@@ -50,9 +50,19 @@ class StockServiceImpl implements StockService {
     }
 
     @Override
+    public Mono<Page<StockItem>> listStock(PageRequest pageRequest) {
+        return stockRepository
+                .findAllByOrderByStockItemId(pageRequest)
+                .flatMap(this::assembleStockItem)
+                .transform(collectPages(pageRequest))
+                .single();
+    }
+
+    @Override
     @Transactional
     public Mono<StockItem> update(StockOperation stockOperation) {
-        return stockOperationRepository.findById(operationIdMapper.map(stockOperation.operationId()))
+        return stockOperationRepository
+                .findById(operationIdMapper.map(stockOperation.operationId()))
                 .flatMap(operation -> {
 
                     log.info("Operation with id [{}] already processed", operation.getOperationId());
@@ -91,7 +101,7 @@ class StockServiceImpl implements StockService {
         return stockOperation.match(
                 this::createNewStockItem,
                 remove -> Mono.error(new IllegalStateException(
-                        "Cannot sale non existing stock item [%s]".formatted(stockOperation))));
+                        "Cannot sale non-existing stock item [%s]".formatted(stockOperation))));
     }
 
     private static void doUpdateStock(StockItemEntity stockItemEntity, StockOperation stockOperation) {
@@ -129,15 +139,6 @@ class StockServiceImpl implements StockService {
 
     private Mono<StockItemEntity> createNewStockItem(AddToStock addToStock) {
         return stockRepository.save(addToStockToAddToStockItemMapper.map(addToStock));
-    }
-
-    @Override
-    public Mono<Page<StockItem>> listStock(PageRequest pageRequest) {
-        return stockRepository
-                .findAllByOrderByStockItemId(pageRequest)
-                .flatMap(this::assembleStockItem)
-                .transform(collectPages(pageRequest))
-                .single();
     }
 
     private Mono<StockItem> assembleStockItem(StockItemEntity stockItem) {
