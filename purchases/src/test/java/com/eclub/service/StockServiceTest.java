@@ -17,7 +17,8 @@ import org.springframework.test.annotation.DirtiesContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.*;
 
 
 @ServiceTest
@@ -81,7 +82,30 @@ class StockServiceTest {
     @Autowired StockService stockService;
 
     @Nested
-    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
+    class StockOperationTest {
+
+        @Test
+        void shouldReturnFalseIfOperationNotProcessed() {
+            var isProcessed = stockService.isOperationProcessed(OPERATION_ID_1).block();
+
+            assertThat(isProcessed).isFalse();
+        }
+
+        @Test
+        void shouldReturnTrueIfOperationProcessed() {
+            insertOperation(OPERATION_ID_1);
+
+            var isProcessed = stockService.isOperationProcessed(OPERATION_ID_1).block();
+
+            assertThat(isProcessed).isTrue();
+        }
+
+    }
+
+    @Nested
+    @DirtiesContext(classMode = AFTER_CLASS)
+    @TestInstance(PER_CLASS)
     class StockListTest {
 
         @BeforeAll
