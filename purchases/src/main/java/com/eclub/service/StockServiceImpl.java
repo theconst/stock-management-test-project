@@ -65,7 +65,7 @@ class StockServiceImpl implements StockService {
 
         log.info("Processing operation with id [{}]", operationId);
 
-        return stockOperationRepository.save(new StockOperationEntity(operationId, ZonedDateTime.now(ZoneId.of("UTC"))))
+        return stockOperationRepository.save(StockOperationEntity.of(operationId, ZonedDateTime.now(ZoneId.of("UTC"))))
                 .then(getStockItem(stockOperation)
                         .doOnNext(stockItemEntity -> doUpdateStock(stockItemEntity, stockOperation))
                         .flatMap(stockRepository::save)
