@@ -1,0 +1,7 @@
+spring:
+    r2dbc:
+        url: r2dbc:h2:mem:///eclub
+    rabbitmq:
+        listener:
+            direct:
+                auto-startup: false
