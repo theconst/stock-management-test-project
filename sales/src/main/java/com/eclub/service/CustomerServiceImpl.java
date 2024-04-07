@@ -3,10 +3,11 @@ package com.eclub.service;
 import com.eclub.mapper.CustomerEntityToCustomerMapper;
 import com.eclub.mapper.CustomerToCustomerEntityMapper;
 import com.eclub.domain.Customer;
-import com.eclub.domain.Page;
 import com.eclub.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -27,10 +28,12 @@ class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Flux<Customer> listCustomers(Page page) {
+    public Mono<Page<Customer>> listCustomers(PageRequest page) {
         return customerRepository
-                .findAllByOrderByCustomerId(PageRequest.of(page.page(), page.size()))
-                .map(customerEntityToCustomerMapper::map);
+                .findAllByOrderByCustomerId(page)
+                .map(customerEntityToCustomerMapper::map)
+                .collectList()
+                .map(result -> new PageImpl<>(result, page, result.size()));
     }
 
     @Override

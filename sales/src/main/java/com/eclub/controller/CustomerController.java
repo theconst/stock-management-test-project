@@ -3,12 +3,12 @@ package com.eclub.controller;
 import com.eclub.dto.CustomerDto;
 import com.eclub.mapper.CustomerDtoToCustomerMapper;
 import com.eclub.mapper.CustomerToCustomerDtoMapper;
-import com.eclub.domain.Page;
 import com.eclub.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -27,7 +27,7 @@ public class CustomerController {
                 .map(customerToCustomerDtoMapper::map);
     }
 
-    @PutMapping("/{id}") //TODO: validate
+    @PutMapping("/{id}")
     public Mono<CustomerDto> modifyCustomer(@RequestBody CustomerDto customer) {
         return customerService
                 .upsert(customerDtoToCustomerMapper.map(customer))
@@ -42,12 +42,12 @@ public class CustomerController {
     }
 
     @GetMapping("/")
-    public Flux<CustomerDto> listCustomers(
-            @RequestParam(value = "path", required = false, defaultValue = "0") int page,
-            @RequestParam(value = "size", required = false, defaultValue = "20") int size) {
+    public Mono<Page<CustomerDto>> listCustomers(
+            @RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize) {
         return customerService
-                .listCustomers(new Page(page, size))
-                .map(customerToCustomerDtoMapper::map);
+                .listCustomers(PageRequest.of(pageNumber, pageSize))
+                .map(page -> page.map(customerToCustomerDtoMapper::map));
     }
 
 }
