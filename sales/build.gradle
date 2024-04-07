@@ -33,6 +33,14 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
     implementation 'org.springframework.data:spring-data-relational'
     implementation 'org.postgresql:r2dbc-postgresql:1.0.4.RELEASE'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    testImplementation 'com.h2database:h2:2.2.224'
+    testImplementation 'io.r2dbc:r2dbc-h2:1.0.0.RELEASE'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
 }
 
 test {
