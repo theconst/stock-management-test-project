@@ -9,9 +9,11 @@ import com.eclub.service.CustomerService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.reactive.config.EnableWebFlux;
 
 @EnableWebFlux
+@EnableScheduling
 @SpringBootApplication
 @ComponentScan(basePackageClasses = {
         RepositoryConfiguration.class,

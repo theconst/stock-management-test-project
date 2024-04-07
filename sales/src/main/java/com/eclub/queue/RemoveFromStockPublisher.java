@@ -13,14 +13,23 @@ import reactor.core.scheduler.Schedulers;
 @Service
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class SalePublisher {
+public class RemoveFromStockPublisher {
     private final RabbitTemplate rabbitTemplate;
     @Value("${stock-queue.routing-key}")
     private final String purchaseRoutingKey;
-    public Mono<Object> publish(RemoveFromStockMessage sale) {
-        return Mono.fromRunnable(() -> {
-                    log.info("Sending stock update {}[{}]", sale, purchaseRoutingKey);
-                    rabbitTemplate.convertAndSend(purchaseRoutingKey, sale);
+
+    /**
+     * Publish remove from stock operation
+     *
+     * @param removeFromStockMessage message to publish
+     * @return message of the id sent
+     */
+    public Mono<String> publish(RemoveFromStockMessage removeFromStockMessage) {
+        return Mono.fromCallable(() -> {
+                    log.info("Sending stock update {}[{}]", removeFromStockMessage, purchaseRoutingKey);
+                    rabbitTemplate.convertAndSend(purchaseRoutingKey, removeFromStockMessage);
+
+                    return removeFromStockMessage.getMessageId();
                 })
                 .subscribeOn(Schedulers.boundedElastic());
     }
