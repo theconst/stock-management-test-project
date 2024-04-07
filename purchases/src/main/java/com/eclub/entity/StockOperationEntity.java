@@ -2,6 +2,7 @@ package com.eclub.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -11,6 +12,7 @@ import java.time.ZonedDateTime;
 @Data
 @Table("stock_operation")
 public final class StockOperationEntity {
+    @Id
     @Column("operation_id")
     String operationId;
     ZonedDateTime processed;
