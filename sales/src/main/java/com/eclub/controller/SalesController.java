@@ -1,11 +1,12 @@
 package com.eclub.controller;
 
-import com.eclub.domain.SaleItem;
-import com.eclub.dto.SaleDto;
-import com.eclub.dto.SaleResponseDto;
-import com.eclub.mapper.SaleDtoToSellItemMapper;
-import com.eclub.mapper.SaleItemToSaleDtoMapper;
-import com.eclub.mapper.SaleItemAndStockOperationIdResponseDtoMapper;
+import com.eclub.domain.SaleItem.SaleItemId;
+import com.eclub.dto.request.SaleRequest;
+import com.eclub.dto.response.SaleCreatedResponse;
+import com.eclub.dto.response.SaleResponse;
+import com.eclub.mapper.SaleItemAndStockOperationIdToSaleCreatedResponseMapper;
+import com.eclub.mapper.SaleItemToSaleResponseMapper;
+import com.eclub.mapper.SaleRequestToSellItemMapper;
 import com.eclub.service.SaleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 @Slf4j
@@ -23,29 +31,29 @@ import reactor.core.publisher.Mono;
 public class SalesController {
     private final SaleService saleService;
 
-    private final SaleDtoToSellItemMapper saleDtoToSellItemMapper;
-    private final SaleItemAndStockOperationIdResponseDtoMapper saleItemAndStockOperationIdResponseDtoMapper;
-    private final SaleItemToSaleDtoMapper saleItemToSaleDtoMapper;
+    private final SaleRequestToSellItemMapper saleRequestToSellItemMapper;
+    private final SaleItemAndStockOperationIdToSaleCreatedResponseMapper
+            saleItemAndStockOperationIdToSaleCreatedResponseMapper;
+    private final SaleItemToSaleResponseMapper saleItemToSaleResponseMapper;
 
     @GetMapping("/{id}")
-    public Mono<SaleDto> findSaleItemById(@PathVariable("id") Long id) {
-        return saleService.findSaleById(new SaleItem.SaleItemId(id))
-                .map(saleItemToSaleDtoMapper::map);
+    public Mono<SaleResponse> findSaleItemById(@PathVariable("id") Long id) {
+        return saleService.findSaleById(new SaleItemId(id))
+                .map(saleItemToSaleResponseMapper::map);
     }
 
     @GetMapping("/")
-    public Mono<Page<SaleDto>> listSales(
+    public Mono<Page<SaleResponse>> listSales(
             @RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber,
             @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize) {
-        return saleService
-                .listSales(PageRequest.of(pageNumber, pageSize))
-                .map(page -> page.map(saleItemToSaleDtoMapper::map));
+        return saleService.listSales(PageRequest.of(pageNumber, pageSize))
+                .map(page -> page.map(saleItemToSaleResponseMapper::map));
     }
 
     @PutMapping("/")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Mono<SaleResponseDto> sell(@RequestBody SaleDto sale) {
-        return saleService.recordSale(saleDtoToSellItemMapper.map(sale))
-                .map(saleItemAndStockOperationIdResponseDtoMapper::map);
+    public Mono<SaleCreatedResponse> sell(@RequestBody SaleRequest sale) {
+        return saleService.recordSale(saleRequestToSellItemMapper.map(sale))
+                .map(saleItemAndStockOperationIdToSaleCreatedResponseMapper::map);
     }
 }

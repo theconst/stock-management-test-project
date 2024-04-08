@@ -1,8 +1,8 @@
 package com.eclub.service;
 
+import com.eclub.domain.Customer;
 import com.eclub.mapper.CustomerEntityToCustomerMapper;
 import com.eclub.mapper.CustomerToCustomerEntityMapper;
-import com.eclub.domain.Customer;
 import com.eclub.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -3,7 +3,6 @@ package com.eclub.queue;
 import com.eclub.entity.RemoveFromStockEntity;
 import com.eclub.mapper.RemoveFromStockEntityToRemoveFromStockMessageMapper;
 import com.eclub.message.RemoveFromStockMessage;
-import com.eclub.queue.RemoveFromStockPublisher;
 import com.eclub.repository.RemoveFromStockRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
