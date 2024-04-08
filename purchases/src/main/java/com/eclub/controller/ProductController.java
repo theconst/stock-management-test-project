@@ -6,6 +6,7 @@ import com.eclub.mapper.ProductDtoToProductMapper;
 import com.eclub.mapper.ProductIdMapper;
 import com.eclub.mapper.ProductToProductDtoMapper;
 import com.eclub.service.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,6 +32,7 @@ public class ProductController {
     private final ProductToProductDtoMapper productToProductDtoMapper;
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get product by id")
     public Mono<ProductResponse> getProductById(@PathVariable Long id) {
         return productService
                 .getProduct(productIdMapper.map(id))
@@ -38,6 +40,7 @@ public class ProductController {
     }
 
     @GetMapping("/")
+    @Operation(summary = "List all products (pagination is done by id)")
     public Mono<Page<ProductResponse>> listAllProducts(
             @RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber,
             @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize) {
@@ -47,11 +50,13 @@ public class ProductController {
     }
 
     @PostMapping
+    @Operation(summary = "Create product")
     public Mono<ProductResponse> createProduct(@RequestBody ProductRequest product) {
         return upsertProduct(product);
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Modify product")
     public Mono<ProductResponse> modifyProduct(@RequestBody ProductRequest product) {
         return upsertProduct(product);
     }

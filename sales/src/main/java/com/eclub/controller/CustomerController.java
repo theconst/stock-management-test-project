@@ -5,6 +5,7 @@ import com.eclub.dto.response.CustomerResponse;
 import com.eclub.mapper.CustomerDtoToCustomerMapper;
 import com.eclub.mapper.CustomerToCustomerResponseMapper;
 import com.eclub.service.CustomerService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,6 +30,7 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @GetMapping("/{id}")
+    @Operation(summary = "Find customer by id")
     public Mono<CustomerResponse> findCustomerById(@PathVariable("id") Long id) {
         return customerService
                 .findCustomerById(id)
@@ -36,6 +38,7 @@ public class CustomerController {
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Modify customer")
     public Mono<CustomerResponse> modifyCustomer(@RequestBody CustomerRequest customer) {
         return customerService
                 .upsert(customerDtoToCustomerMapper.map(customer))
@@ -43,6 +46,7 @@ public class CustomerController {
     }
 
     @PostMapping("/")
+    @Operation(summary = "Create new customer")
     public Mono<CustomerResponse> createCustomer(@RequestBody CustomerRequest customer) {
         return customerService
                 .upsert(customerDtoToCustomerMapper.map(customer))
@@ -50,6 +54,7 @@ public class CustomerController {
     }
 
     @GetMapping("/")
+    @Operation(summary = "List customers. Pagination is done by id")
     public Mono<Page<CustomerResponse>> listCustomers(
             @RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber,
             @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize) {

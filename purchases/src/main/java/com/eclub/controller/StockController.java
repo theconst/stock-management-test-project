@@ -7,6 +7,7 @@ import com.eclub.mapper.OperationIdMapper;
 import com.eclub.mapper.StockItemIdMapper;
 import com.eclub.mapper.StockItemToStockItemResponseMapper;
 import com.eclub.service.StockService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,6 +29,7 @@ public class StockController {
     private final StockService stockService;
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get stock item by id")
     public Mono<StockItemResponse> getStockItemById(@PathVariable Long id) {
         return stockService
                 .getStockItem(stockItemIdMapper.map(id))
@@ -35,6 +37,7 @@ public class StockController {
     }
 
     @GetMapping("operations/{id}/status")
+    @Operation(summary = "Get status of stock operation")
     public Mono<StockOperationStatusResponse> getOperationStatus(@PathVariable("id") String id) {
         return stockService.isOperationProcessed(operationIdMapper.map(id))
                 .map(exists -> exists
@@ -43,6 +46,7 @@ public class StockController {
     }
 
     @GetMapping("/")
+    @Operation(summary = "List all stock items. Pagination is done by id")
     public Mono<Page<StockItemResponse>> listAllStockItems(
             @RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber,
             @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize) {

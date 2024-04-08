@@ -8,6 +8,7 @@ import com.eclub.mapper.SaleItemAndStockOperationIdToSaleCreatedResponseMapper;
 import com.eclub.mapper.SaleItemToSaleResponseMapper;
 import com.eclub.mapper.SaleRequestToSellItemMapper;
 import com.eclub.service.SaleService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,12 +38,14 @@ public class SalesController {
     private final SaleItemToSaleResponseMapper saleItemToSaleResponseMapper;
 
     @GetMapping("/{id}")
+    @Operation(summary = "Find sale item by id")
     public Mono<SaleResponse> findSaleItemById(@PathVariable("id") Long id) {
         return saleService.findSaleById(new SaleItemId(id))
                 .map(saleItemToSaleResponseMapper::map);
     }
 
     @GetMapping("/")
+    @Operation(summary = "List sale items. Pagination is done by id")
     public Mono<Page<SaleResponse>> listSales(
             @RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber,
             @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize) {
@@ -51,6 +54,8 @@ public class SalesController {
     }
 
     @PutMapping("/")
+    @Operation(summary = "Sell products. Returns sale record with pending stock operation. " +
+            "Check status in <purchase-service-ulr>/stock-items/operations/{id}/status")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public Mono<SaleCreatedResponse> sell(@RequestBody SaleRequest sale) {
         return saleService.recordSale(saleRequestToSellItemMapper.map(sale))
