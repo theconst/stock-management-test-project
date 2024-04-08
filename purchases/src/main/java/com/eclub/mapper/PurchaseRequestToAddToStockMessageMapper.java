@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(config = MappingConfiguration.class)
-public interface PurchaseDtoToAddToStockMessageMapper {
+public interface PurchaseRequestToAddToStockMessageMapper {
 
     @Mapping(target = "type", expression = "java(com.eclub.message.StockOperationMessage.Type.ADD_TO_STOCK)")
     AddToStockMessage map(PurchaseRequest dto, String messageId);

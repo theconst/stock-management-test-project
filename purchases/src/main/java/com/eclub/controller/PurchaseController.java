@@ -2,7 +2,7 @@ package com.eclub.controller;
 
 import com.eclub.dto.request.PurchaseRequest;
 import com.eclub.dto.response.StockOperationIdResponse;
-import com.eclub.mapper.PurchaseDtoToAddToStockMessageMapper;
+import com.eclub.mapper.PurchaseRequestToAddToStockMessageMapper;
 import com.eclub.queue.AddToStockPublisher;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import java.util.UUID;
 @RequestMapping("purchases")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class PurchaseController {
-    private final PurchaseDtoToAddToStockMessageMapper purchaseDtoToAddToStockMessageMapperMapper;
+    private final PurchaseRequestToAddToStockMessageMapper purchaseRequestToAddToStockMessageMapperMapper;
     private final AddToStockPublisher addToStockPublisher;
 
     @PutMapping("/")
@@ -30,7 +30,7 @@ public class PurchaseController {
     public Mono<StockOperationIdResponse> purchase(@RequestBody PurchaseRequest purchase) {
         String messageId = UUID.randomUUID().toString();
         return addToStockPublisher
-                .publish(purchaseDtoToAddToStockMessageMapperMapper.map(purchase, messageId))
+                .publish(purchaseRequestToAddToStockMessageMapperMapper.map(purchase, messageId))
                 .thenReturn(new StockOperationIdResponse(messageId));
     }
 }

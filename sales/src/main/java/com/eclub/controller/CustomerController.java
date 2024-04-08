@@ -4,7 +4,7 @@ import com.eclub.dto.request.CreateCustomerRequest;
 import com.eclub.dto.request.ModifyCustomerRequest;
 import com.eclub.dto.response.CustomerResponse;
 import com.eclub.mapper.CreateCustomerRequestToCustomerMapper;
-import com.eclub.mapper.CustomerDtoToCustomerMapper;
+import com.eclub.mapper.ModifyCustomerRequestToCustomerMapper;
 import com.eclub.mapper.CustomerToCustomerResponseMapper;
 import com.eclub.service.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,7 +26,7 @@ import reactor.core.publisher.Mono;
 @RequestMapping("customers")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CustomerController {
-    private final CustomerDtoToCustomerMapper customerDtoToCustomerMapper;
+    private final ModifyCustomerRequestToCustomerMapper modifyCustomerRequestToCustomerMapper;
     private final CustomerToCustomerResponseMapper customerToCustomerResponse;
     private final CreateCustomerRequestToCustomerMapper createCustomerRequestToCustomerMapper;
 
@@ -44,7 +44,7 @@ public class CustomerController {
     @Operation(summary = "Modify customer")
     public Mono<CustomerResponse> modifyCustomer(@RequestBody ModifyCustomerRequest customer) {
         return customerService
-                .upsert(customerDtoToCustomerMapper.map(customer))
+                .upsert(modifyCustomerRequestToCustomerMapper.map(customer))
                 .map(customerToCustomerResponse::map);
     }
 

@@ -5,7 +5,7 @@ import com.eclub.dto.request.ModifyCustomerRequest;
 import org.mapstruct.Mapper;
 
 @Mapper(uses = CustomerIdMapper.class, config = MappingConfiguration.class)
-public interface CustomerDtoToCustomerMapper {
+public interface ModifyCustomerRequestToCustomerMapper {
 
     Customer map(ModifyCustomerRequest modifyCustomerRequest);
 }
