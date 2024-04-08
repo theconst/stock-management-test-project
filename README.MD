@@ -29,7 +29,7 @@ The application consists of 2 services:
 - `sales`. Responsible for handling sales and customers.
 
 Each service exposes REST API to manage the respectful entities.
-Basic API docs are accessible via `/swagger-ui` endpoints.
+Basic API docs are accessible via `/swagger-ui.html` endpoints.
 
 Each service uses a shared PostgresSQL database.
 Shared schema is managed by `migration` module using [flyway](https://flywaydb.org/).
