@@ -5,7 +5,7 @@ import com.eclub.dto.SaleDto;
 import com.eclub.dto.SaleResponseDto;
 import com.eclub.mapper.SaleDtoToSellItemMapper;
 import com.eclub.mapper.SaleItemToSaleDtoMapper;
-import com.eclub.mapper.SaleRecordToSaleResponseDtoMapper;
+import com.eclub.mapper.SaleItemAndStockOperationIdResponseDtoMapper;
 import com.eclub.service.SaleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ public class SalesController {
     private final SaleService saleService;
 
     private final SaleDtoToSellItemMapper saleDtoToSellItemMapper;
-    private final SaleRecordToSaleResponseDtoMapper saleRecordToSaleResponseDtoMapper;
+    private final SaleItemAndStockOperationIdResponseDtoMapper saleItemAndStockOperationIdResponseDtoMapper;
     private final SaleItemToSaleDtoMapper saleItemToSaleDtoMapper;
 
     @GetMapping("/{id}")
@@ -46,6 +46,6 @@ public class SalesController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public Mono<SaleResponseDto> sell(@RequestBody SaleDto sale) {
         return saleService.recordSale(saleDtoToSellItemMapper.map(sale))
-                .map(saleRecordToSaleResponseDtoMapper::map);
+                .map(saleItemAndStockOperationIdResponseDtoMapper::map);
     }
 }

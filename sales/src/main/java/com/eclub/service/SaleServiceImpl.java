@@ -3,7 +3,7 @@ package com.eclub.service;
 import com.eclub.domain.RemoveFromStockOperationId;
 import com.eclub.domain.SaleItem;
 import com.eclub.domain.SaleItem.SaleItemId;
-import com.eclub.domain.SaleRecord;
+import com.eclub.domain.SaleItemAndStockOperationId;
 import com.eclub.mapper.SaleItemEntityToSaleItemMapper;
 import com.eclub.mapper.SaleItemToRemoveFromStockEntityMapper;
 import com.eclub.mapper.SaleItemToSaleItemEntityMapper;
@@ -33,13 +33,13 @@ class SaleServiceImpl implements SaleService {
 
     @Override
     @Transactional
-    public Mono<SaleRecord> recordSale(SaleItem saleItem) {
+    public Mono<SaleItemAndStockOperationId> recordSale(SaleItem saleItem) {
         var operationId = UUID.randomUUID().toString();
 
         return Mono.zip(saleItemRepository.save(saleItemToSaleItemEntityMapper.map(saleItem)),
                         removeFromStockRepository.save(saleItemToRemoveFromStockEntityMapper.map(saleItem, operationId)))
                 .map(saleItemAndOperationId ->
-                        new SaleRecord(
+                        new SaleItemAndStockOperationId(
                                 saleItemEntityToSaleItemMapper.map(saleItemAndOperationId.getT1()),
                                 new RemoveFromStockOperationId(saleItemAndOperationId.getT2().getOperationId())));
     }
