@@ -9,9 +9,9 @@ import java.math.BigDecimal;
 @Builder
 @Jacksonized
 public record SaleResponse(
-        @Schema(name = "Id of sale") Long id,
-        @Schema(name = "Stock item id") Long stockItemId,
-        @Schema(name = "Customer id") Long customerId,
+        @Schema(description = "Id of sale") Long id,
+        @Schema(description = "Stock item id") Long stockItemId,
+        @Schema(description = "Customer id") Long customerId,
         @Schema(description = "Total price of sale") BigDecimal price,
         @Schema(description = "Number of items sold") Integer quantity) {
 }

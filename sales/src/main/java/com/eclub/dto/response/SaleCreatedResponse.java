@@ -7,6 +7,6 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Jacksonized
 public record SaleCreatedResponse(
-        @Schema(name = "Stock item id") String stockOperationId,
+        @Schema(description = "Stock item id") String stockOperationId,
         @Schema(description = "Sale record") SaleResponse sale) {
 }

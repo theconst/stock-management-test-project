@@ -3,7 +3,7 @@ package com.eclub.dto.response;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record StockOperationStatusResponse(
-        @Schema(name = "Stock operation id", description = "Id of stock operation") String stockOperationId,
+        @Schema(description = "Id of stock operation") String stockOperationId,
         @Schema(description = "Status of operation. Non-submitted operations are PENDING") Status status) {
 
     public enum Status {

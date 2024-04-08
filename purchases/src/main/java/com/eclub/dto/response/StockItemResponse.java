@@ -10,6 +10,6 @@ import lombok.extern.jackson.Jacksonized;
 public record StockItemResponse(
         Long id,
         ProductResponse product,
-        @Schema(name = "Batch number") BatchNumber batchNumber,
+        @Schema(description = "Batch number") BatchNumber batchNumber,
         Integer quantity) {
 }
