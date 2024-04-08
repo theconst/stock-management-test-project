@@ -1,6 +1,10 @@
 package com.eclub.dto.response;
 
-public record StockOperationStatusResponse(String stockOperationId, Status status) {
+import io.swagger.v3.oas.annotations.media.Schema;
+
+public record StockOperationStatusResponse(
+        @Schema(name = "Stock operation id", description = "Id of stock operation") String stockOperationId,
+        @Schema(description = "Status of operation. Non-submitted operations are PENDING") Status status) {
 
     public enum Status {
         PENDING, PROCESSED
