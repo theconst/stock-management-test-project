@@ -21,12 +21,10 @@ There is only one warehouse or warehouse for all the products.
 ### Expected output
 - [x] Source code
 - [x] Deployment docs
-- [] Unit test
+- [x] Unit test
 
 ## Implementation documentation
 [//]: # (TODO: write documentation after implementing)
-
-[//]: # (TODO: should I use default control on RabbitMQ)
 
 ## Deployment
 
