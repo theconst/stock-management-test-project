@@ -1,10 +1,13 @@
 package com.eclub.controller;
 
-import com.eclub.dto.request.ProductRequest;
+import com.eclub.domain.Product;
+import com.eclub.dto.request.CreateProductRequest;
+import com.eclub.dto.request.ModifyProductRequest;
 import com.eclub.dto.response.ProductResponse;
-import com.eclub.mapper.ProductDtoToProductMapper;
+import com.eclub.mapper.CreateProductRequestToProductMapper;
+import com.eclub.mapper.ModifyProductRequestToProductMapper;
 import com.eclub.mapper.ProductIdMapper;
-import com.eclub.mapper.ProductToProductDtoMapper;
+import com.eclub.mapper.ProductToProductResponseMapper;
 import com.eclub.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -25,18 +28,19 @@ import reactor.core.publisher.Mono;
 @RequestMapping("products")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ProductController {
-
     private final ProductService productService;
+
     private final ProductIdMapper productIdMapper;
-    private final ProductDtoToProductMapper productDtoToProductMapper;
-    private final ProductToProductDtoMapper productToProductDtoMapper;
+    private final CreateProductRequestToProductMapper createProductRequestToProductMapper;
+    private final ModifyProductRequestToProductMapper modifyProductRequestToProductMapper;
+    private final ProductToProductResponseMapper productToProductResponseMapper;
 
     @GetMapping("/{id}")
     @Operation(summary = "Get product by id")
     public Mono<ProductResponse> getProductById(@PathVariable Long id) {
         return productService
                 .getProduct(productIdMapper.map(id))
-                .map(productToProductDtoMapper::map);
+                .map(productToProductResponseMapper::map);
     }
 
     @GetMapping("/")
@@ -46,24 +50,24 @@ public class ProductController {
             @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize) {
         return productService
                 .listProducts(PageRequest.of(pageNumber, pageSize))
-                .map(page -> page.map(productToProductDtoMapper::map));
+                .map(page -> page.map(productToProductResponseMapper::map));
     }
 
     @PostMapping
     @Operation(summary = "Create product")
-    public Mono<ProductResponse> createProduct(@RequestBody ProductRequest product) {
-        return upsertProduct(product);
+    public Mono<ProductResponse> createProduct(@RequestBody CreateProductRequest product) {
+        return upsertProduct(createProductRequestToProductMapper.map(product));
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Modify product")
-    public Mono<ProductResponse> modifyProduct(@RequestBody ProductRequest product) {
-        return upsertProduct(product);
+    public Mono<ProductResponse> modifyProduct(@RequestBody ModifyProductRequest product) {
+        return upsertProduct(modifyProductRequestToProductMapper.map(product));
     }
 
-    private Mono<ProductResponse> upsertProduct(ProductRequest product) {
+    private Mono<ProductResponse> upsertProduct(Product product) {
         return productService
-                .upsertProduct(productDtoToProductMapper.map(product))
-                .map(productToProductDtoMapper::map);
+                .upsertProduct(product)
+                .map(productToProductResponseMapper::map);
     }
 }

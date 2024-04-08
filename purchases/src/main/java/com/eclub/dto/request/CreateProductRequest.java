@@ -6,8 +6,7 @@ import lombok.extern.jackson.Jacksonized;
 
 @Builder
 @Jacksonized
-public record ProductRequest(
-        @Schema(description = "Product id") Long id,
+public record CreateProductRequest(
         @Schema(description = "Product name", example = "Lenovo IdeaPad") String name,
         @Schema(description = "Vendor name", example = "Lenovo") String vendor,
         @Schema(description = "Product description", example = "Cheap laptop") String description) {

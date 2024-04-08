@@ -5,6 +5,6 @@ import com.eclub.dto.response.ProductResponse;
 import org.mapstruct.Mapper;
 
 @Mapper(uses = ProductIdMapper.class, config = MappingConfiguration.class)
-public interface ProductToProductDtoMapper {
+public interface ProductToProductResponseMapper {
     ProductResponse map(Product product);
 }
