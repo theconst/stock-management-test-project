@@ -13,14 +13,17 @@ import org.mapstruct.Mapping;
         config = MappingConfiguration.class)
 public interface StockTransactionMessageToStockOperationMapper {
 
-    default StockOperation map(StockOperationMessage transaction) {
+    default StockOperation map(StockOperationMessage message) {
+        if (message == null) {
+            return null;
+        }
         // JAVA21: migrate to switch pattern matching
-        if (transaction instanceof AddToStockMessage pm) {
+        if (message instanceof AddToStockMessage pm) {
             return map(pm);
-        } else if (transaction instanceof RemoveFromStockMessage sm) {
+        } else if (message instanceof RemoveFromStockMessage sm) {
             return map(sm);
         }
-        throw new IllegalArgumentException("Transaction type %s not supported".formatted(transaction));
+        throw new IllegalArgumentException("Transaction type %s not supported".formatted(message));
     }
 
     @Mapping(target = "operationId", source = "messageId")
