@@ -12,6 +12,11 @@ java {
     }
 }
 
+bootJar {
+    archiveFileName = "${project.name}-boot-${project.version}.jar"
+}
+
+
 lombok {
     version = "${lombokVersion}"
 }
