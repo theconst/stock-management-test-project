@@ -1,6 +1,7 @@
 package com.eclub.controller;
 
-import com.eclub.dto.ProductDto;
+import com.eclub.dto.request.ProductRequest;
+import com.eclub.dto.response.ProductResponse;
 import com.eclub.mapper.ProductDtoToProductMapper;
 import com.eclub.mapper.ProductIdMapper;
 import com.eclub.mapper.ProductToProductDtoMapper;
@@ -30,14 +31,14 @@ public class ProductController {
     private final ProductToProductDtoMapper productToProductDtoMapper;
 
     @GetMapping("/{id}")
-    public Mono<ProductDto> getProductById(@PathVariable Long id) {
+    public Mono<ProductResponse> getProductById(@PathVariable Long id) {
         return productService
                 .getProduct(productIdMapper.map(id))
                 .map(productToProductDtoMapper::map);
     }
 
     @GetMapping("/")
-    public Mono<Page<ProductDto>> listAllProducts(
+    public Mono<Page<ProductResponse>> listAllProducts(
             @RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber,
             @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize) {
         return productService
@@ -46,16 +47,16 @@ public class ProductController {
     }
 
     @PostMapping
-    public Mono<ProductDto> createProduct(@RequestBody ProductDto product) {
+    public Mono<ProductResponse> createProduct(@RequestBody ProductRequest product) {
         return upsertProduct(product);
     }
 
     @PutMapping("/{id}")
-    public Mono<ProductDto> modifyProduct(@RequestBody ProductDto product) {
+    public Mono<ProductResponse> modifyProduct(@RequestBody ProductRequest product) {
         return upsertProduct(product);
     }
 
-    private Mono<ProductDto> upsertProduct(ProductDto product) {
+    private Mono<ProductResponse> upsertProduct(ProductRequest product) {
         return productService
                 .upsertProduct(productDtoToProductMapper.map(product))
                 .map(productToProductDtoMapper::map);

@@ -1,11 +1,11 @@
 package com.eclub.controller;
 
 
-import com.eclub.dto.StockItemDto;
-import com.eclub.dto.StockOperationStatusDto;
+import com.eclub.dto.response.StockItemResponse;
+import com.eclub.dto.response.StockOperationStatusResponse;
 import com.eclub.mapper.OperationIdMapper;
 import com.eclub.mapper.StockItemIdMapper;
-import com.eclub.mapper.StockItemToStockItemDtoMapper;
+import com.eclub.mapper.StockItemToStockItemResponseMapper;
 import com.eclub.service.StockService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,28 +24,30 @@ import reactor.core.publisher.Mono;
 public class StockController {
     private final OperationIdMapper operationIdMapper;
     private final StockItemIdMapper stockItemIdMapper;
-    private final StockItemToStockItemDtoMapper stockItemToStockItemDtoMapper;
+    private final StockItemToStockItemResponseMapper stockItemToStockItemResponseMapper;
     private final StockService stockService;
 
     @GetMapping("/{id}")
-    public Mono<StockItemDto> getStockItemById(@PathVariable Long id) {
+    public Mono<StockItemResponse> getStockItemById(@PathVariable Long id) {
         return stockService
                 .getStockItem(stockItemIdMapper.map(id))
-                .map(stockItemToStockItemDtoMapper::map);
+                .map(stockItemToStockItemResponseMapper::map);
     }
 
     @GetMapping("operations/{id}/status")
-    public Mono<StockOperationStatusDto> getOperationStatus(@PathVariable("id") String id) {
+    public Mono<StockOperationStatusResponse> getOperationStatus(@PathVariable("id") String id) {
         return stockService.isOperationProcessed(operationIdMapper.map(id))
-                .map(exists -> exists ? StockOperationStatusDto.processed(id) : StockOperationStatusDto.pending(id));
+                .map(exists -> exists
+                        ? StockOperationStatusResponse.processed(id)
+                        : StockOperationStatusResponse.pending(id));
     }
 
     @GetMapping("/")
-    public Mono<Page<StockItemDto>> listAllStockItems(
+    public Mono<Page<StockItemResponse>> listAllStockItems(
             @RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber,
             @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize) {
         return stockService
                 .listStock(PageRequest.of(pageNumber, pageSize))
-                .map(p -> p.map(stockItemToStockItemDtoMapper::map));
+                .map(p -> p.map(stockItemToStockItemResponseMapper::map));
     }
 }

@@ -1,7 +1,6 @@
-package com.eclub.controller;
+package com.eclub.mapper;
 
-import com.eclub.dto.PurchaseDto;
-import com.eclub.mapper.MappingConfiguration;
+import com.eclub.dto.request.PurchaseRequest;
 import com.eclub.message.AddToStockMessage;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -10,5 +9,5 @@ import org.mapstruct.Mapping;
 public interface PurchaseDtoToAddToStockMessageMapper {
 
     @Mapping(target = "type", expression = "java(com.eclub.message.StockOperationMessage.Type.ADD_TO_STOCK)")
-    AddToStockMessage map(PurchaseDto dto, String messageId);
+    AddToStockMessage map(PurchaseRequest dto, String messageId);
 }

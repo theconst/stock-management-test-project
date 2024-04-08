@@ -1,7 +1,8 @@
 package com.eclub.controller;
 
-import com.eclub.dto.PurchaseDto;
-import com.eclub.dto.StockOperationIdDto;
+import com.eclub.dto.request.PurchaseRequest;
+import com.eclub.dto.response.StockOperationIdResponse;
+import com.eclub.mapper.PurchaseDtoToAddToStockMessageMapper;
 import com.eclub.queue.AddToStockPublisher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +25,10 @@ public class PurchaseController {
 
     @PutMapping("/")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Mono<StockOperationIdDto> purchase(@RequestBody PurchaseDto purchase) {
+    public Mono<StockOperationIdResponse> purchase(@RequestBody PurchaseRequest purchase) {
         String messageId = UUID.randomUUID().toString();
         return addToStockPublisher
                 .publish(purchaseDtoToAddToStockMessageMapperMapper.map(purchase, messageId))
-                .thenReturn(new StockOperationIdDto(messageId));
+                .thenReturn(new StockOperationIdResponse(messageId));
     }
 }
