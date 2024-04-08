@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="EClubTestTask:migration [flywayMigrate]" type="GradleRunConfiguration" factoryName="Gradle">
+  <configuration default="false" name="database_migration" type="GradleRunConfiguration" factoryName="Gradle">
     <ExternalSystemSettings>
       <option name="env">
         <map>
