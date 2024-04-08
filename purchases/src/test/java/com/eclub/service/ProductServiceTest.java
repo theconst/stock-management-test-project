@@ -10,7 +10,9 @@ import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Map;
 
-import static com.eclub.service.Products.*;
+import static com.eclub.service.Products.IDEA_PAD;
+import static com.eclub.service.Products.MACBOOK;
+import static com.eclub.service.Products.PRODUCT_ID_1;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
 

@@ -1,8 +1,8 @@
 package com.eclub.controller;
 
-import com.eclub.message.AddToStockMessage;
 import com.eclub.dto.PurchaseDto;
 import com.eclub.mapper.MappingConfiguration;
+import com.eclub.message.AddToStockMessage;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

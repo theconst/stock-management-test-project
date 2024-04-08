@@ -1,7 +1,6 @@
 package com.eclub.mapper;
 
 import com.eclub.domain.Product;
-import jakarta.annotation.Nonnull;
 import org.mapstruct.Mapper;
 
 @Mapper(config = MappingConfiguration.class)

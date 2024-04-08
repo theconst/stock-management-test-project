@@ -1,9 +1,13 @@
 package com.eclub.service;
 
 import com.eclub.ServiceTest;
-import com.eclub.domain.*;
+import com.eclub.domain.AddToStock;
+import com.eclub.domain.Product;
+import com.eclub.domain.RemoveFromStock;
+import com.eclub.domain.StockItem;
 import com.eclub.domain.StockItem.BatchNumber;
 import com.eclub.domain.StockItem.StockItemId;
+import com.eclub.domain.StockOperation;
 import com.eclub.domain.StockOperation.OperationId;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Nested;
@@ -19,7 +23,8 @@ import static com.eclub.service.Products.MACBOOK;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.*;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 
 @ServiceTest

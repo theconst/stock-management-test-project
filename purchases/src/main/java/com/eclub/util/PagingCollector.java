@@ -7,9 +7,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.util.function.Tuple2;
 
-import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
