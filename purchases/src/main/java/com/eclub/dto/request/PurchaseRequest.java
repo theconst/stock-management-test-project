@@ -9,5 +9,5 @@ import lombok.extern.jackson.Jacksonized;
 public record PurchaseRequest(
         @Schema(name = "Product id", description = "Id of the product") Long productId,
         @Schema(name = "Batch number", description = "Batch number of the purchase") Long batchNumber,
-        Integer quantity) {
+        @Schema(description = "Quantity of products added to stock") Integer quantity) {
 }
