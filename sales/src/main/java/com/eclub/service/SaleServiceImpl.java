@@ -61,7 +61,7 @@ class SaleServiceImpl implements SaleService {
     public Mono<Page<SaleItem>> listSales(PageRequest pageRequest) {
         return saleItemRepository.findAllByOrderBySaleId(pageRequest)
                 .map(saleItemEntityToSaleItemMapper::map)
-                .transform(collectPages(pageRequest, saleItemRepository::count))
+                .transform(collectPages(pageRequest, saleItemRepository.count()))
                 .single();
     }
 }

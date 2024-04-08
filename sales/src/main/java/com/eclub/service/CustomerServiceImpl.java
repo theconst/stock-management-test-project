@@ -32,7 +32,7 @@ class CustomerServiceImpl implements CustomerService {
         return customerRepository
                 .findAllByOrderByCustomerId(pageRequest)
                 .map(customerEntityToCustomerMapper::map)
-                .transform(collectPages(pageRequest, customerRepository::count))
+                .transform(collectPages(pageRequest, customerRepository.count()))
                 .single();
     }
 

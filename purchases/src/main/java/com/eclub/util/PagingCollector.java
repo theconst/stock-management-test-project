@@ -9,7 +9,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class PagingCollector {
@@ -17,14 +16,14 @@ public final class PagingCollector {
     /**
      *
      * @param pageRequest page request
-     * @param count getter of total items
+     * @param count total number items
      * @return page of items in flux
      * @param <T> type of items
      */
-    public static <T> Function<Flux<T>, Mono<Page<T>>> collectPages(PageRequest pageRequest, Supplier<Mono<Long>> count) {
+    public static <T> Function<Flux<T>, Mono<Page<T>>> collectPages(PageRequest pageRequest, Mono<Long> count) {
         return items -> items
                 .collectList()
-                .zipWith(count.get())
+                .zipWith(count)
                 .map(itemsAndCount -> new PageImpl<>(itemsAndCount.getT1(), pageRequest, itemsAndCount.getT2()));
     }
 }

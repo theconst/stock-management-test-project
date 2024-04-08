@@ -43,7 +43,7 @@ class ProductServiceImpl implements ProductService {
         return productRepository
                 .findAllByOrderByProductId(pageRequest)
                 .map(productEntityToProductMapper::map)
-                .transform(collectPages(pageRequest, productRepository::count))
+                .transform(collectPages(pageRequest, productRepository.count()))
                 .single();
     }
 }
