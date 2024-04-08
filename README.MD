@@ -74,7 +74,7 @@ To deploy via docker compose you will need `docker` and `docker-compose` install
 
 ### Local deployment
 
-1. Launch PostgresSQL.  Prepare local database
+1. Launch PostgresSQL. Prepare local database
     ```sql
     CREATE USER eclub;
     GRANT CREATE ON SCHEMA public TO eclub;
