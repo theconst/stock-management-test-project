@@ -10,6 +10,7 @@ import com.eclub.mapper.ProductIdMapper;
 import com.eclub.mapper.ProductToProductResponseMapper;
 import com.eclub.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -55,13 +56,13 @@ public class ProductController {
 
     @PostMapping
     @Operation(summary = "Create product")
-    public Mono<ProductResponse> createProduct(@RequestBody CreateProductRequest product) {
+    public Mono<ProductResponse> createProduct(@Valid @RequestBody CreateProductRequest product) {
         return upsertProduct(createProductRequestToProductMapper.map(product));
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Modify product")
-    public Mono<ProductResponse> modifyProduct(@RequestBody ModifyProductRequest product) {
+    public Mono<ProductResponse> modifyProduct(@Valid @RequestBody ModifyProductRequest product) {
         return upsertProduct(modifyProductRequestToProductMapper.map(product));
     }
 

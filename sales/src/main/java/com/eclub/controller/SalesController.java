@@ -9,6 +9,7 @@ import com.eclub.mapper.SaleItemToSaleResponseMapper;
 import com.eclub.mapper.SaleRequestToSellItemMapper;
 import com.eclub.service.SaleService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +58,7 @@ public class SalesController {
     @Operation(summary = "Sell products. Returns sale record with pending stock operation. " +
             "Check status in <purchase-service-ulr>/stock-items/operations/{id}/status")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Mono<SaleCreatedResponse> sell(@RequestBody SaleRequest sale) {
+    public Mono<SaleCreatedResponse> sell(@Valid @RequestBody SaleRequest sale) {
         return saleService.recordSale(saleRequestToSellItemMapper.map(sale))
                 .map(saleItemAndStockOperationIdToSaleCreatedResponseMapper::map);
     }

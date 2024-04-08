@@ -8,6 +8,7 @@ import com.eclub.mapper.ModifyCustomerRequestToCustomerMapper;
 import com.eclub.mapper.CustomerToCustomerResponseMapper;
 import com.eclub.service.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,7 +43,7 @@ public class CustomerController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Modify customer")
-    public Mono<CustomerResponse> modifyCustomer(@RequestBody ModifyCustomerRequest customer) {
+    public Mono<CustomerResponse> modifyCustomer(@Valid @RequestBody ModifyCustomerRequest customer) {
         return customerService
                 .upsert(modifyCustomerRequestToCustomerMapper.map(customer))
                 .map(customerToCustomerResponse::map);
@@ -50,7 +51,7 @@ public class CustomerController {
 
     @PostMapping("/")
     @Operation(summary = "Create new customer")
-    public Mono<CustomerResponse> createCustomer(@RequestBody CreateCustomerRequest customer) {
+    public Mono<CustomerResponse> createCustomer(@Valid @RequestBody CreateCustomerRequest customer) {
         return customerService
                 .upsert(createCustomerRequestToCustomerMapper.map(customer))
                 .map(customerToCustomerResponse::map);

@@ -5,6 +5,7 @@ import com.eclub.dto.response.StockOperationIdResponse;
 import com.eclub.mapper.PurchaseRequestToAddToStockMessageMapper;
 import com.eclub.queue.AddToStockPublisher;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,7 @@ public class PurchaseController {
     @PutMapping("/")
     @ResponseStatus(HttpStatus.ACCEPTED)
     @Operation(summary = "Adds product to stock. Modification currently is not supported")
-    public Mono<StockOperationIdResponse> purchase(@RequestBody PurchaseRequest purchase) {
+    public Mono<StockOperationIdResponse> purchase(@Valid @RequestBody PurchaseRequest purchase) {
         String messageId = UUID.randomUUID().toString();
         return addToStockPublisher
                 .publish(purchaseRequestToAddToStockMessageMapperMapper.map(purchase, messageId))
