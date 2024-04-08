@@ -70,7 +70,7 @@ To deploy locally you will need:
 - RabbitMQ (tested version `3.12.10`)
 - PostgresSQL (tested version `16.2`)
 
-To deploy via docker compose you will need `docker` and `docker-compose` installed.
+To deploy via docker-compose you will need `docker` and `docker-compose` installed.
 
 ### Local deployment
 
