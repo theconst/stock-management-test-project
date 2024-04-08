@@ -6,12 +6,6 @@ plugins {
     id 'com.bmuschko.docker-remote-api'
 }
 
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
-    }
-}
-
 bootJar {
     archiveFileName = "${project.name}-boot-${project.version}.jar"
 }
