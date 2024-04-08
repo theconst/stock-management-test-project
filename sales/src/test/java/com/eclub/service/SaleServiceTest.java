@@ -9,6 +9,7 @@ import com.eclub.domain.SaleItemAndStockOperationId;
 import com.eclub.domain.StockItemId;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.r2dbc.core.DatabaseClient.GenericExecuteSpec;
 import org.springframework.test.annotation.DirtiesContext;
@@ -20,23 +21,27 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
 
 @ServiceTest
 @DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
 class SaleServiceTest {
     static final SaleItemId SALE_ITEM_ID = new SaleItemId(1L);
+    static final SaleItemId SALE_ITEM_ID_2 = new SaleItemId(2L);
+
     static final CustomerId CUSTOMER_ID = new CustomerId(1L);
-    static final StockItemId STOCK_ITEM_ID = new StockItemId(1L);
+    static final StockItemId STOCK_ITEM_ID_1 = new StockItemId(1L);
     static final BigDecimal PRICE = new BigDecimal(10).setScale(2);
     static final int QUANTITY = 5;
-    static final SaleItem SALE_ITEM = SaleItem.builder()
+    static final SaleItem SALE_ITEM_1 = SaleItem.builder()
             .id(SALE_ITEM_ID)
             .customerId(CUSTOMER_ID)
-            .stockItemId(STOCK_ITEM_ID)
+            .stockItemId(STOCK_ITEM_ID_1)
             .price(PRICE)
             .quantity(QUANTITY)
+            .build();
+    static final SaleItem SALE_ITEM_2 = SALE_ITEM_1.toBuilder()
+            .id(SALE_ITEM_ID_2)
             .build();
 
     @Autowired DatabaseClient databaseClient;
@@ -44,22 +49,36 @@ class SaleServiceTest {
 
     @Test
     void shouldListSales() {
-        fail("Not implemented");
+        prepareProductStockAndCustomerData();
+        insertSale(SALE_ITEM_1);
+        insertSale(SALE_ITEM_2);
+
+        var page1 = saleService.listSales(PageRequest.of(0, 1)).block();
+        var page2 = saleService.listSales(PageRequest.of(1, 1)).block();
+
+        assertThat(page1.getTotalPages()).isEqualTo(2);
+        assertThat(page1).hasSize(1);
+        assertThat(page1).containsExactly(SALE_ITEM_1);
+
+        assertThat(page1.getTotalPages()).isEqualTo(2);
+        assertThat(page2).hasSize(1);
+        assertThat(page2).containsExactly(SALE_ITEM_2);
+
     }
 
     @Test
     void shouldRecordNewSaleAndStockOperation() {
         prepareProductStockAndCustomerData();
 
-        SaleItemAndStockOperationId result = saleService.recordSale(SALE_ITEM.toBuilder().id(null).build()).block();
+        SaleItemAndStockOperationId result = saleService.recordSale(SALE_ITEM_1.toBuilder().id(null).build()).block();
         RemoveFromStockOperationId operationId = result.stockOperationId();
 
-        assertThat(result.sale()).isEqualTo(SALE_ITEM);
+        assertThat(result.sale()).isEqualTo(SALE_ITEM_1);
         assertThat(operationId).isNotNull();
 
         assertThat(getOutbox()).containsExactly(Map.of(
                 "OPERATION_ID", operationId.id(),
-                "STOCK_ITEM_ID", STOCK_ITEM_ID.id(),
+                "STOCK_ITEM_ID", STOCK_ITEM_ID_1.id(),
                 "QUANTITY", Long.valueOf(QUANTITY)
         ));
     }
@@ -67,20 +86,20 @@ class SaleServiceTest {
     @Test
     void shouldNotAllowToUpdateSales() {
         prepareProductStockAndCustomerData();
-        insertSale(SALE_ITEM);
+        insertSale(SALE_ITEM_1);
 
         assertThrows(UnsupportedOperationException.class,
-                saleService.recordSale(SALE_ITEM.toBuilder().quantity(1).build())::block);
+                saleService.recordSale(SALE_ITEM_1.toBuilder().quantity(1).build())::block);
     }
 
     @Test
     void shouldFindSaleById() {
         prepareProductStockAndCustomerData();
-        insertSale(SALE_ITEM);
+        insertSale(SALE_ITEM_1);
 
         SaleItem item = saleService.findSaleById(SALE_ITEM_ID).block();
 
-        assertThat(item).isEqualTo(SALE_ITEM);
+        assertThat(item).isEqualTo(SALE_ITEM_1);
     }
 
     private void insertSale(SaleItem saleItem) {
