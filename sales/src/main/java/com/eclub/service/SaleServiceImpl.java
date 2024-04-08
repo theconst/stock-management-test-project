@@ -34,8 +34,14 @@ class SaleServiceImpl implements SaleService {
     @Override
     @Transactional
     public Mono<SaleItemAndStockOperationId> recordSale(SaleItem saleItem) {
-        var operationId = UUID.randomUUID().toString();
+        if (saleItem.id() != null) {
+            throw new UnsupportedOperationException("Sale modification are not supported");
+        }
+        return createSale(saleItem);
+    }
 
+    private Mono<SaleItemAndStockOperationId> createSale(SaleItem saleItem) {
+        String operationId = UUID.randomUUID().toString();
         return Mono.zip(saleItemRepository.save(saleItemToSaleItemEntityMapper.map(saleItem)),
                         removeFromStockRepository.save(saleItemToRemoveFromStockEntityMapper.map(saleItem, operationId)))
                 .map(saleItemAndOperationId ->
