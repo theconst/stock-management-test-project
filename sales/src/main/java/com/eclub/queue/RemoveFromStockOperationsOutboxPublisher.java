@@ -1,4 +1,4 @@
-package com.eclub.service;
+package com.eclub.queue;
 
 import com.eclub.entity.RemoveFromStockEntity;
 import com.eclub.mapper.RemoveFromStockEntityToRemoveFromStockMessageMapper;
