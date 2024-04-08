@@ -1,7 +1,9 @@
 package com.eclub.controller;
 
-import com.eclub.dto.request.CustomerRequest;
+import com.eclub.dto.request.CreateCustomerRequest;
+import com.eclub.dto.request.ModifyCustomerRequest;
 import com.eclub.dto.response.CustomerResponse;
+import com.eclub.mapper.CreateCustomerRequestToCustomerMapper;
 import com.eclub.mapper.CustomerDtoToCustomerMapper;
 import com.eclub.mapper.CustomerToCustomerResponseMapper;
 import com.eclub.service.CustomerService;
@@ -26,6 +28,7 @@ import reactor.core.publisher.Mono;
 public class CustomerController {
     private final CustomerDtoToCustomerMapper customerDtoToCustomerMapper;
     private final CustomerToCustomerResponseMapper customerToCustomerResponse;
+    private final CreateCustomerRequestToCustomerMapper createCustomerRequestToCustomerMapper;
 
     private final CustomerService customerService;
 
@@ -39,7 +42,7 @@ public class CustomerController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Modify customer")
-    public Mono<CustomerResponse> modifyCustomer(@RequestBody CustomerRequest customer) {
+    public Mono<CustomerResponse> modifyCustomer(@RequestBody ModifyCustomerRequest customer) {
         return customerService
                 .upsert(customerDtoToCustomerMapper.map(customer))
                 .map(customerToCustomerResponse::map);
@@ -47,9 +50,9 @@ public class CustomerController {
 
     @PostMapping("/")
     @Operation(summary = "Create new customer")
-    public Mono<CustomerResponse> createCustomer(@RequestBody CustomerRequest customer) {
+    public Mono<CustomerResponse> createCustomer(@RequestBody CreateCustomerRequest customer) {
         return customerService
-                .upsert(customerDtoToCustomerMapper.map(customer))
+                .upsert(createCustomerRequestToCustomerMapper.map(customer))
                 .map(customerToCustomerResponse::map);
     }
 
