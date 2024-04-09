@@ -7,5 +7,5 @@ import org.mapstruct.Mapper;
 @Mapper(uses = CustomerIdMapper.class, config = MappingConfiguration.class)
 public interface ModifyCustomerRequestToCustomerMapper {
 
-    Customer map(ModifyCustomerRequest modifyCustomerRequest);
+    Customer map(ModifyCustomerRequest modifyCustomerRequest, Long id);
 }

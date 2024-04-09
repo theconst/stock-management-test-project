@@ -6,9 +6,13 @@ import org.springframework.data.domain.PageRequest;
 import reactor.core.publisher.Mono;
 
 public interface CustomerService {
-    Mono<Customer> upsert(Customer customer);
+    Mono<Customer> createCustomer(Customer customer);
+    Mono<Customer> updateCustomer(Customer customer);
+    Mono<Void> deleteCustomer(Long id);
 
     Mono<Page<Customer>> listCustomers(PageRequest page);
 
     Mono<Customer> findCustomerById(Long id);
+
+
 }

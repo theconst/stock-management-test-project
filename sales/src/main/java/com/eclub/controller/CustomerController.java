@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,11 +42,20 @@ public class CustomerController {
                 .map(customerToCustomerResponse::map);
     }
 
+    @DeleteMapping("/{id}")
+    @Operation(summary = "delete customer by id")
+    public Mono<Void> deleteCustomerById(@PathVariable("id") Long id) {
+        return customerService
+                .deleteCustomer(id);
+    }
+
     @PutMapping("/{id}")
     @Operation(summary = "Modify customer")
-    public Mono<CustomerResponse> modifyCustomer(@Valid @RequestBody ModifyCustomerRequest customer) {
+    public Mono<CustomerResponse> modifyCustomer(
+            @PathVariable("id") Long id,
+            @Valid @RequestBody ModifyCustomerRequest customer) {
         return customerService
-                .upsert(modifyCustomerRequestToCustomerMapper.map(customer))
+                .updateCustomer(modifyCustomerRequestToCustomerMapper.map(customer, id))
                 .map(customerToCustomerResponse::map);
     }
 
@@ -53,7 +63,7 @@ public class CustomerController {
     @Operation(summary = "Create new customer")
     public Mono<CustomerResponse> createCustomer(@Valid @RequestBody CreateCustomerRequest customer) {
         return customerService
-                .upsert(createCustomerRequestToCustomerMapper.map(customer))
+                .createCustomer(createCustomerRequestToCustomerMapper.map(customer))
                 .map(customerToCustomerResponse::map);
     }
 
@@ -66,5 +76,4 @@ public class CustomerController {
                 .listCustomers(PageRequest.of(pageNumber, pageSize))
                 .map(page -> page.map(customerToCustomerResponse::map));
     }
-
 }

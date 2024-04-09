@@ -10,12 +10,12 @@ import java.math.BigDecimal;
 @Builder
 @Jacksonized
 public record SaleRequest(
-        @NotNull
+        @NotNull(message = "Stock item id is required")
         @Schema(description = "Stock item id") Long stockItemId,
-        @NotNull
+        @NotNull(message = "Customer id is required")
         @Schema(description = "Customer id") Long customerId,
-        @NotNull
+        @NotNull(message = "Price is required")
         @Schema(description = "Total price of sale") BigDecimal price,
-        @NotNull
+        @NotNull(message = "Quantity is required")
         @Schema(description = "Number of items sold") Integer quantity) {
 }

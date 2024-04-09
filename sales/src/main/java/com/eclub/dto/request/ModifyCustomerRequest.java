@@ -9,8 +9,6 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Jacksonized
 public record ModifyCustomerRequest(
-        @NotNull
-        @Schema(description = "Customer id") Long id,
         @Schema(description = "First name", example = "John") String firstName,
         @Schema(description = "Last name", example = "Smith") String lastName,
         @Schema(description = "Phone number", example = "+123456789") String phoneNumber,

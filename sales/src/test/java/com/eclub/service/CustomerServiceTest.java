@@ -2,7 +2,6 @@ package com.eclub.service;
 
 import com.eclub.ServiceTest;
 import com.eclub.domain.Customer;
-import com.eclub.domain.Customer.CustomerId;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -12,33 +11,19 @@ import reactor.core.publisher.Flux;
 import java.util.List;
 import java.util.Map;
 
+import static com.eclub.common.CustomerStubs.CUSTOMER_1;
+import static com.eclub.common.CustomerStubs.CUSTOMER_2;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ServiceTest
 class CustomerServiceTest {
-    static final CustomerId CUSTOMER_ID_1 = new CustomerId(1L);
-    static final CustomerId CUSTOMER_ID_2 = new CustomerId(2L);
-    static final Customer CUSTOMER_1 = Customer.builder()
-            .id(CUSTOMER_ID_1)
-            .address("Green Str.")
-            .lastName("Smith")
-            .firstName("John")
-            .phoneNumber("+123456")
-            .build();
-    private static final Customer CUSTOMER_2 = Customer.builder()
-            .id(CUSTOMER_ID_2)
-            .address("White Str.")
-            .lastName("White")
-            .firstName("William")
-            .phoneNumber("+567890")
-            .build();
 
     @Autowired DatabaseClient databaseClient;
     @Autowired CustomerService customerService;
 
     @Test
     void shouldCreateCustomer() {
-        customerService.upsert(CUSTOMER_1.toBuilder().id(null).build()).block();
+        customerService.createCustomer(CUSTOMER_1.toBuilder().id(null).build()).block();
 
         assertThat(getCustomers())
                 .containsExactly(Map.of(
@@ -57,7 +42,7 @@ class CustomerServiceTest {
                 VALUES (1, 'William', 'Spock', 'White Str.', '+567890')
                 """).then().block();
 
-        Customer customer = customerService.upsert(CUSTOMER_1).block();
+        Customer customer = customerService.createCustomer(CUSTOMER_1).block();
 
         assertThat(customer).isEqualTo(CUSTOMER_1);
 

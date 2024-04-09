@@ -8,9 +8,9 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Jacksonized
 public record CreateCustomerRequest(
-        @NotBlank
+        @NotBlank(message = "First name is required")
         @Schema(description = "First name", example = "John") String firstName,
-        @NotBlank
+        @NotBlank(message = "Last name is required")
         @Schema(description = "Last name", example = "Smith") String lastName,
         @Schema(description = "Phone number", example = "+123456789") String phoneNumber,
         @Schema(description = "Customer address", example = "Green Str.") String address) {

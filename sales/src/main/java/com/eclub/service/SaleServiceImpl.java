@@ -4,6 +4,7 @@ import com.eclub.domain.RemoveFromStockOperationId;
 import com.eclub.domain.SaleItem;
 import com.eclub.domain.SaleItem.SaleItemId;
 import com.eclub.domain.SaleItemAndStockOperationId;
+import com.eclub.domain.exception.NotFoundException;
 import com.eclub.mapper.SaleItemEntityToSaleItemMapper;
 import com.eclub.mapper.SaleItemToRemoveFromStockEntityMapper;
 import com.eclub.mapper.SaleItemToSaleItemEntityMapper;
@@ -54,6 +55,7 @@ class SaleServiceImpl implements SaleService {
     public Mono<SaleItem> findSaleById(SaleItemId id) {
         return saleItemRepository
                 .findById(id.id())
+                .switchIfEmpty(Mono.error(new NotFoundException("Sale item [%s] is not found".formatted(id.id()))))
                 .map(saleItemEntityToSaleItemMapper::map);
     }
 
