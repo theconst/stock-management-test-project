@@ -1,7 +1,7 @@
 # eCLUB Paraguay test task
 
 ## Task description
-_This is just a description of the task as state in the presentation, feel free to skip the section_
+_This is just a description of the task as stated in the presentation, feel free to skip the section_
 
 ### Requisites
 #### Microservice for the product purchases
