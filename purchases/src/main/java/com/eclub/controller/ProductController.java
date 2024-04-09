@@ -1,6 +1,5 @@
 package com.eclub.controller;
 
-import com.eclub.domain.Product;
 import com.eclub.dto.request.CreateProductRequest;
 import com.eclub.dto.request.ModifyProductRequest;
 import com.eclub.dto.response.ProductResponse;
@@ -57,18 +56,19 @@ public class ProductController {
     @PostMapping
     @Operation(summary = "Create product")
     public Mono<ProductResponse> createProduct(@Valid @RequestBody CreateProductRequest product) {
-        return upsertProduct(createProductRequestToProductMapper.map(product));
+        return productService
+                .createProduct(createProductRequestToProductMapper.map(product))
+                .map(productToProductResponseMapper::map);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Modify product")
-    public Mono<ProductResponse> modifyProduct(@Valid @RequestBody ModifyProductRequest product) {
-        return upsertProduct(modifyProductRequestToProductMapper.map(product));
-    }
-
-    private Mono<ProductResponse> upsertProduct(Product product) {
+    public Mono<ProductResponse> modifyProduct(
+            @PathVariable("id") Long id,
+            @Valid @RequestBody ModifyProductRequest product) {
         return productService
-                .upsertProduct(product)
+                .updateProduct(modifyProductRequestToProductMapper.map(product, id))
                 .map(productToProductResponseMapper::map);
     }
+
 }

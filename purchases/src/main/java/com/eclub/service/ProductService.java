@@ -10,7 +10,9 @@ public interface ProductService {
 
     Mono<Product> getProduct(ProductId id);
 
-    Mono<Product> upsertProduct(Product product);
+    Mono<Product> createProduct(Product product);
 
     Mono<Page<Product>> listProducts(PageRequest pageRequest);
+
+    Mono<Product> updateProduct(Product map);
 }

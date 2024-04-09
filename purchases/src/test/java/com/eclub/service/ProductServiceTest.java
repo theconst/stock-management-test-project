@@ -1,7 +1,7 @@
 package com.eclub.service;
 
-import com.eclub.common.DbTemplate;
 import com.eclub.ServiceTest;
+import com.eclub.common.DbTemplate;
 import com.eclub.domain.Product;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ class ProductServiceTest {
 
     @Test
     void shouldCreateProduct() {
-        var product = productService.upsertProduct(IDEA_PAD.toBuilder().id(null).build()).block();
+        var product = productService.createProduct(IDEA_PAD.toBuilder().id(null).build()).block();
 
         assertThat(product).isEqualTo(IDEA_PAD.toBuilder().id(new Product.ProductId(1)).build());
 
@@ -42,11 +42,11 @@ class ProductServiceTest {
     @Test
     void shouldUpdateProduct() {
         db.insertProduct(IDEA_PAD);
-        Product updated = IDEA_PAD.toBuilder().vendor("Shingway ltd.").build();
+        Product updated = Product.builder().id(IDEA_PAD.id()).vendor("Shingway ltd.").build();
 
-        var product = productService.upsertProduct(updated).block();
+        var product = productService.updateProduct(updated).block();
 
-        assertThat(product).isEqualTo(updated);
+        assertThat(product).isEqualTo(IDEA_PAD.toBuilder().vendor("Shingway ltd.").build());
 
         assertThat(db.selectProductByVendor(IDEA_PAD.vendor())).isNull();
         assertThat(db.selectProductByVendor("Shingway ltd.")).isNotEmpty();
