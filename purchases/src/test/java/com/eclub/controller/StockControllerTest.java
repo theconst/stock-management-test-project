@@ -5,6 +5,7 @@ import com.eclub.common.DbTemplate;
 import com.eclub.domain.StockOperation.OperationId;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.util.UUID;
@@ -16,8 +17,10 @@ import static com.eclub.controller.ResponseSpecs.stockEqualTo;
 import static com.eclub.controller.RestSpecs.OK_REST_RESPONSE;
 import static org.assertj.core.api.BDDAssertions.fail;
 import static org.hamcrest.Matchers.equalTo;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
 
 @ControllerTest
+@DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
 class StockControllerTest {
     @Autowired
     DbTemplate db;

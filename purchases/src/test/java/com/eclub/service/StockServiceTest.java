@@ -3,10 +3,9 @@ package com.eclub.service;
 import com.eclub.ServiceTest;
 import com.eclub.common.DbTemplate;
 import com.eclub.domain.StockItem;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -24,20 +23,18 @@ import static com.eclub.common.StockStubs.REMOVE_FROM_STOCK_TOO_MANY;
 import static com.eclub.common.StockStubs.STOCK_ITEM_ID_1;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
 
-
-@ServiceTest
+@DirtiesContext(classMode = AFTER_CLASS)
 class StockServiceTest {
 
-    @Autowired DbTemplate db;
-    @Autowired StockService stockService;
-
     @Nested
-    @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
+    @ServiceTest
+    @DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
     class StockOperationTest {
+        @Autowired DbTemplate db;
+        @Autowired StockService stockService;
 
         @Test
         void shouldReturnFalseIfOperationNotProcessed() {
@@ -58,11 +55,13 @@ class StockServiceTest {
     }
 
     @Nested
-    @DirtiesContext(classMode = AFTER_CLASS)
-    @TestInstance(PER_CLASS)
+    @ServiceTest
+    @DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
     class StockListTest {
+        @Autowired DbTemplate db;
+        @Autowired StockService stockService;
 
-        @BeforeAll
+        @BeforeEach
         void setUp() {
             db.insertProduct(IDEA_PAD);
             db.insertStock(IDEA_PAD_STOCK);
@@ -95,8 +94,11 @@ class StockServiceTest {
     }
 
     @Nested
-    @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
+    @ServiceTest
+    @DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
     class StockUpdateTest {
+        @Autowired DbTemplate db;
+        @Autowired StockService stockService;
 
         @Test
         void shouldCreateNewStockItemIfItemIsAddedToStockAndTheProductExists() {
