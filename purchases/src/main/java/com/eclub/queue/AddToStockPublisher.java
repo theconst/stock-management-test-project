@@ -18,11 +18,12 @@ public class AddToStockPublisher {
     @Value("${stock-queue.routing-key}")
     private final String stockQueueRoutingKey;
 
-    public Mono<Object> publish(AddToStockMessage addToStockMessage) {
+    public Mono<Void> publish(AddToStockMessage addToStockMessage) {
         return Mono.fromRunnable(() -> {
                     log.info("Sending stock update {}[{}]", addToStockMessage, stockQueueRoutingKey);
                     rabbitTemplate.convertAndSend(stockQueueRoutingKey, addToStockMessage);
                 })
-                .subscribeOn(Schedulers.boundedElastic());
+                .subscribeOn(Schedulers.boundedElastic())
+                .then();
     }
 }
