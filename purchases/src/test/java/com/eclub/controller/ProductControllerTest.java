@@ -120,13 +120,11 @@ class ProductControllerTest {
     }
 
     @Test
-    @Disabled
     void shouldReturnEmptyPageIfNoItemsExist() {
         fail("Not implemented");
     }
 
     @Test
-    @Disabled
     void shouldPaginateThroughProducts() {
         fail("Not implemented");
     }
