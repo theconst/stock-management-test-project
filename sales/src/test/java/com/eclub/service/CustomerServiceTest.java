@@ -42,17 +42,26 @@ class CustomerServiceTest {
                 VALUES (1, 'William', 'Spock', 'White Str.', '+567890')
                 """).then().block();
 
-        Customer customer = customerService.createCustomer(CUSTOMER_1).block();
+        Customer customer = customerService.updateCustomer(Customer.builder()
+                .id(new Customer.CustomerId(1L))
+                .address("Green Str.")
+                .build()).block();
 
-        assertThat(customer).isEqualTo(CUSTOMER_1);
+        assertThat(customer).isEqualTo(Customer.builder()
+                .id(new Customer.CustomerId(1L))
+                .address("Green Str.")
+                .firstName("William")
+                .lastName("Spock")
+                .phoneNumber("+567890")
+                .build());
 
         assertThat(getCustomers())
                 .containsExactly(Map.of(
                         "CUSTOMER_ID", Long.valueOf(1L),
                         "ADDRESS", "Green Str.",
-                        "LAST_NAME", "Smith",
-                        "FIRST_NAME", "John",
-                        "PHONE_NUMBER", "+123456"
+                        "FIRST_NAME", "William",
+                        "LAST_NAME", "Spock",
+                        "PHONE_NUMBER", "+567890"
                 ));
     }
 
