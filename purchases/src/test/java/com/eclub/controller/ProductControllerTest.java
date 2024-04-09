@@ -10,7 +10,7 @@ class ProductControllerTest {
     @Autowired ProductController productController;
 
     @Test
-    void shouldGetCreateProduct() {
+    void shouldGetProduct() {
 
     }
 }

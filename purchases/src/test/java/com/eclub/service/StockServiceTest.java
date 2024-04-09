@@ -1,8 +1,8 @@
 package com.eclub.service;
 
 import com.eclub.ServiceTest;
+import com.eclub.common.DbTemplate;
 import com.eclub.domain.AddToStock;
-import com.eclub.domain.Product;
 import com.eclub.domain.RemoveFromStock;
 import com.eclub.domain.StockItem;
 import com.eclub.domain.StockItem.BatchNumber;
@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.test.annotation.DirtiesContext;
 
 import static com.eclub.service.Products.IDEA_PAD;
@@ -68,7 +67,7 @@ class StockServiceTest {
             .quantity(100 * QUANTITY)
             .build();
 
-    @Autowired DatabaseClient databaseClient;
+    @Autowired DbTemplate db;
     @Autowired StockService stockService;
 
     @Nested
@@ -84,7 +83,7 @@ class StockServiceTest {
 
         @Test
         void shouldReturnTrueIfOperationProcessed() {
-            insertOperation(OPERATION_ID_1);
+            db.insertOperation(OPERATION_ID_1);
 
             var isProcessed = stockService.isOperationProcessed(OPERATION_ID_1).block();
 
@@ -100,11 +99,11 @@ class StockServiceTest {
 
         @BeforeAll
         void setUp() {
-            insertProduct(IDEA_PAD);
-            insertStock(IDEA_PAD_STOCK);
+            db.insertProduct(IDEA_PAD);
+            db.insertStock(IDEA_PAD_STOCK);
 
-            insertProduct(MACBOOK);
-            insertStock(MACBOOK_STOCK);
+            db.insertProduct(MACBOOK);
+            db.insertStock(MACBOOK_STOCK);
         }
 
         @Test
@@ -136,7 +135,7 @@ class StockServiceTest {
 
         @Test
         void shouldCreateNewStockItemIfItemIsAddedToStockAndTheProductExists() {
-            insertProduct(IDEA_PAD);
+            db.insertProduct(IDEA_PAD);
 
             StockItem stockItem = stockService.update(ADD_TO_STOCK).block();
 
@@ -152,8 +151,8 @@ class StockServiceTest {
 
         @Test
         void shouldAddToStockItemIfTheBatchAndProductAlreadyInStock() {
-            insertProduct(IDEA_PAD);
-            insertStock(IDEA_PAD_STOCK);
+            db.insertProduct(IDEA_PAD);
+            db.insertStock(IDEA_PAD_STOCK);
 
             StockItem stockItem = stockService.update(ADD_TO_STOCK).block();
 
@@ -169,9 +168,9 @@ class StockServiceTest {
 
         @Test
         void shouldNotAddToStockIfOperationAlreadyCompleted() {
-            insertProduct(IDEA_PAD);
-            insertStock(IDEA_PAD_STOCK);
-            insertOperation(OPERATION_ID_1);
+            db.insertProduct(IDEA_PAD);
+            db.insertStock(IDEA_PAD_STOCK);
+            db.insertOperation(OPERATION_ID_1);
 
             var stockItem = stockService.update(ADD_TO_STOCK).block();
 
@@ -188,7 +187,7 @@ class StockServiceTest {
         @Test
         void shouldReportErrorOnExpiredStockItem() {
             // operation recorded, but stock item was deleted at some point before
-            insertOperation(OPERATION_ID_1);
+            db.insertOperation(OPERATION_ID_1);
 
             var error = assertThrows(IllegalStateException.class, stockService.update(ADD_TO_STOCK)::block);
 
@@ -207,8 +206,8 @@ class StockServiceTest {
 
         @Test
         void shouldRemoveFromStockIfSufficientItemsAvailableInStock() {
-            insertProduct(IDEA_PAD);
-            insertStock(IDEA_PAD_STOCK);
+            db.insertProduct(IDEA_PAD);
+            db.insertStock(IDEA_PAD_STOCK);
 
             var stockItem = stockService.update(REMOVE_FROM_STOCK).block();
 
@@ -224,9 +223,9 @@ class StockServiceTest {
 
         @Test
         void shouldNotRemoveFromStockIfOperationAlreadyCompleted() {
-            insertProduct(IDEA_PAD);
-            insertStock(IDEA_PAD_STOCK);
-            insertOperation(OPERATION_ID_1);
+            db.insertProduct(IDEA_PAD);
+            db.insertStock(IDEA_PAD_STOCK);
+            db.insertOperation(OPERATION_ID_1);
 
             var stockItem = stockService.update(ADD_TO_STOCK).block();
 
@@ -242,42 +241,12 @@ class StockServiceTest {
 
         @Test
         void shouldNotRemoveFromStockIfNonSufficientItemsInStock() {
-            insertProduct(IDEA_PAD);
-            insertStock(IDEA_PAD_STOCK);
+            db.insertProduct(IDEA_PAD);
+            db.insertStock(IDEA_PAD_STOCK);
 
             var error = assertThrows(IllegalArgumentException.class, stockService.update(REMOVE_FROM_STOCK_TOO_MANY)::block);
 
             assertThat(error).hasMessageContaining("Stock exhausted");
         }
-    }
-
-    void insertOperation(OperationId operationId) {
-        databaseClient.sql(
-                "INSERT INTO stock_operation (operation_id, processed) VALUES (:operationId, CURRENT_TIMESTAMP())")
-                .bind("operationId", operationId.id())
-                .then()
-                .block();
-    }
-
-    void insertStock(StockItem stockItem) {
-        databaseClient.sql("INSERT INTO stock (stock_item_id, product_id, batch_number, quantity)"
-            +" VALUES (:stock_item_id, :product_id, :batch_number, :quantity)")
-                .bind("stock_item_id", stockItem.id().id())
-                .bind("product_id", stockItem.product().id().id())
-                .bind("batch_number", stockItem.batchNumber().batchNumber())
-                .bind("quantity", stockItem.quantity())
-                .then()
-                .block();
-    }
-
-    void insertProduct(Product product) {
-        databaseClient.sql("INSERT INTO product (product_id, name, vendor, description)"
-                        + " VALUES (:id, :name, :vendor, :description)")
-                .bind("id", product.id().id())
-                .bind("name", product.name())
-                .bind("vendor", product.vendor())
-                .bind("description", product.description())
-                .then()
-                .block();
     }
 }
