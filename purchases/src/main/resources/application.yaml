@@ -11,7 +11,8 @@ spring:
     url: r2dbc:postgresql://${DB_HOST}/${DB}
     username: ${DB_USER}
     password: ${DB_PASSWORD}
-
+  jackson:
+    default-property-inclusion: non_null
 stock-queue:
   name: stock.transactions
   routing-key: stock.transactions

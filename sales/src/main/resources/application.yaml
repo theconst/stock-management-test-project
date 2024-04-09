@@ -7,6 +7,8 @@ spring:
       type: direct
       direct:
         default-requeue-rejected: false
+  jackson:
+    default-property-inclusion: non_null
   r2dbc:
     url: r2dbc:postgresql://${DB_HOST}/${DB}
     username: ${DB_USER}
