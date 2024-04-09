@@ -24,14 +24,12 @@ import static com.eclub.common.StockStubs.STOCK_ITEM_ID_1;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
 
 @DirtiesContext(classMode = AFTER_CLASS)
 class StockServiceTest {
 
     @Nested
     @ServiceTest
-    @DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
     class StockOperationTest {
         @Autowired DbTemplate db;
         @Autowired StockService stockService;
@@ -56,7 +54,6 @@ class StockServiceTest {
 
     @Nested
     @ServiceTest
-    @DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
     class StockListTest {
         @Autowired DbTemplate db;
         @Autowired StockService stockService;
@@ -95,7 +92,6 @@ class StockServiceTest {
 
     @Nested
     @ServiceTest
-    @DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
     class StockUpdateTest {
         @Autowired DbTemplate db;
         @Autowired StockService stockService;

@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.r2dbc.core.DatabaseClient.GenericExecuteSpec;
-import org.springframework.test.annotation.DirtiesContext;
 import reactor.core.publisher.Flux;
 
 import java.math.BigDecimal;
@@ -21,10 +20,8 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
 
 @ServiceTest
-@DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
 class SaleServiceTest {
     static final SaleItemId SALE_ITEM_ID = new SaleItemId(1L);
     static final SaleItemId SALE_ITEM_ID_2 = new SaleItemId(2L);

@@ -6,16 +6,13 @@ import com.eclub.domain.Product;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.test.annotation.DirtiesContext;
 
 import static com.eclub.common.ProductStubs.IDEA_PAD;
 import static com.eclub.common.ProductStubs.MACBOOK;
 import static com.eclub.common.ProductStubs.PRODUCT_ID_1;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
 
 @ServiceTest
-@DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
 class ProductServiceTest {
     @Autowired DbTemplate db;
     @Autowired ProductService productService;

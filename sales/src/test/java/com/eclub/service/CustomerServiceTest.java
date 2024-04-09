@@ -7,17 +7,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.r2dbc.core.DatabaseClient;
-import org.springframework.test.annotation.DirtiesContext;
 import reactor.core.publisher.Flux;
 
 import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
 
 @ServiceTest
-@DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
 class CustomerServiceTest {
     static final CustomerId CUSTOMER_ID_1 = new CustomerId(1L);
     static final CustomerId CUSTOMER_ID_2 = new CustomerId(2L);

@@ -2,10 +2,8 @@ package com.eclub.controller;
 
 import com.eclub.ControllerTest;
 import com.eclub.common.DbTemplate;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import static com.eclub.common.ProductStubs.IDEA_PAD;
@@ -18,10 +16,8 @@ import static com.eclub.controller.RestSpecs.OK_REST_RESPONSE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Fail.fail;
 import static org.hamcrest.Matchers.equalTo;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
 
 @ControllerTest
-@DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
 class ProductControllerTest {
     @Autowired
     DbTemplate db;
