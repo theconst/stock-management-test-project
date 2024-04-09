@@ -3,6 +3,7 @@ package com.eclub.controller;
 import com.eclub.ControllerTest;
 import com.eclub.common.DbTemplate;
 import com.eclub.domain.Product;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
@@ -15,6 +16,7 @@ import static com.eclub.controller.ClientTweaks.REST_HEADERS_CONF;
 import static com.eclub.controller.RestSpecs.BAD_REQUEST_REST_RESPONSE;
 import static com.eclub.controller.RestSpecs.NOT_FOUND_REST_RESPONSE;
 import static com.eclub.controller.RestSpecs.OK_REST_RESPONSE;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Fail.fail;
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
@@ -119,13 +121,41 @@ class ProductControllerTest {
     }
 
     @Test
+    @Disabled
     void shouldReturnEmptyPageIfNoItemsExist() {
         fail("Not implemented");
     }
 
     @Test
+    @Disabled
     void shouldPaginateThroughProducts() {
         fail("Not implemented");
+    }
+
+    @Test
+    void shouldDeleteProductWhenProductExists() {
+        db.insertProduct(MACBOOK);
+        db.insertProduct(IDEA_PAD);
+
+        client.mutateWith(REST_HEADERS_CONF).delete().uri("/products/%s".formatted(MACBOOK.id().id()))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody().isEmpty();
+
+        assertThat(db.selectProductByName(MACBOOK.name())).isNull();
+        assertThat(db.selectProductByName(IDEA_PAD.name())).isNotNull();
+    }
+
+    @Test
+    void shouldNotDeleteNothingIfProductDoesNotExist() {
+        db.insertProduct(MACBOOK);
+
+        client.mutateWith(REST_HEADERS_CONF).delete().uri("/products/%s".formatted(IDEA_PAD.id().id()))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody().isEmpty();
+
+        assertThat(db.selectProductByName(MACBOOK.name())).isNotEmpty();
     }
 
     static ResponseSpecConsumer productEqualTo(Product product) {

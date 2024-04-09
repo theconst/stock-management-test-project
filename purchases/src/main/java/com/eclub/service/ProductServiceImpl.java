@@ -55,6 +55,11 @@ class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Mono<Void> deleteProduct(ProductId id) {
+        return productRepository.deleteById(productIdMapper.map(id));
+    }
+
+    @Override
     public Mono<Page<Product>> listProducts(PageRequest pageRequest) {
         return productRepository
                 .findAllByOrderByProductId(pageRequest)

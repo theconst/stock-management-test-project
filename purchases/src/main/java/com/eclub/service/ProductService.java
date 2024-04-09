@@ -15,4 +15,6 @@ public interface ProductService {
     Mono<Page<Product>> listProducts(PageRequest pageRequest);
 
     Mono<Product> updateProduct(Product map);
+
+    Mono<Void> deleteProduct(ProductId map);
 }
