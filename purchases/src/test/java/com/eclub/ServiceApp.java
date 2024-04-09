@@ -4,10 +4,10 @@ import com.eclub.common.DbTemplate;
 import com.eclub.mapper.MappingConfiguration;
 import com.eclub.repository.RepositoryConfiguration;
 import com.eclub.service.ProductService;
-import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
-@TestConfiguration
+@SpringBootApplication
 @ComponentScan(basePackageClasses = {
         RepositoryConfiguration.class,
         MappingConfiguration.class,
@@ -15,5 +15,5 @@ import org.springframework.context.annotation.ComponentScan;
 
         DbTemplate.class
 })
-public class ServiceTestConfig {
+public class ServiceApp {
 }

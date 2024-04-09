@@ -10,7 +10,7 @@ import java.lang.annotation.RetentionPolicy;
  * Service-level integration test
  * Test excludes queue and web components, but includes local database (see application-test.yaml)
  */
-@SpringBootTest(classes = TestApp.class)
+@SpringBootTest(classes = ServiceApp.class)
 @ActiveProfiles("test")
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ServiceTest {
