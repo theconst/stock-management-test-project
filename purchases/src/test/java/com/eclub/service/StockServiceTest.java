@@ -29,7 +29,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 
 @ServiceTest
 class StockServiceTest {
-    static final OperationId OPERATION_ID_1 = new OperationId("random-uiid");
+    static final OperationId OPERATION_ID_1 = new OperationId("random-uuid");
     static final StockItemId STOCK_ITEM_ID_1 = new StockItemId(1);
     static final StockItemId STOCK_ITEM_ID_2 = new StockItemId(2);
     static final BatchNumber BATCH_NUMBER_1 = new BatchNumber(1L);
