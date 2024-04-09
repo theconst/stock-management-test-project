@@ -8,10 +8,10 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Jacksonized
 public record PurchaseRequest(
-        @NotNull
+        @NotNull(message = "Product id is required")
         @Schema(description = "Id of the product") Long productId,
-        @NotNull
+        @NotNull(message = "Product id is required")
         @Schema(description = "Batch number of the purchase") Long batchNumber,
-        @NotNull
+        @NotNull(message = "Product id is required")
         @Schema(description = "Quantity of products added to stock") Integer quantity) {
 }
