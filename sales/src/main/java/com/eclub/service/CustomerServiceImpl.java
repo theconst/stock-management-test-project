@@ -37,6 +37,7 @@ class CustomerServiceImpl implements CustomerService {
         return customerRepository.findById(customer.getCustomerId())
                 .switchIfEmpty(notFound(customer.getCustomerId()))
                 .doOnNext(found -> customerUpdater.update(customer, found))
+                .flatMap(customerRepository::save)
                 .map(customerEntityToCustomerMapper::map);
     }
 
