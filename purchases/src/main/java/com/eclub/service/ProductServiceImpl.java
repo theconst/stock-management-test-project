@@ -49,7 +49,7 @@ class ProductServiceImpl implements ProductService {
         return productRepository
                 .findById(updates.getProductId())
                 .switchIfEmpty(notFoundProduct(updates.getProductId()))
-                .doOnNext(found -> productUpdater.map(updates, found))
+                .doOnNext(found -> productUpdater.update(updates, found))
                 .flatMap(productRepository::save)
                 .map(productEntityToProductMapper::map);
     }
