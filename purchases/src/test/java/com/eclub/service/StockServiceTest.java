@@ -2,13 +2,7 @@ package com.eclub.service;
 
 import com.eclub.ServiceTest;
 import com.eclub.common.DbTemplate;
-import com.eclub.domain.AddToStock;
-import com.eclub.domain.RemoveFromStock;
 import com.eclub.domain.StockItem;
-import com.eclub.domain.StockItem.BatchNumber;
-import com.eclub.domain.StockItem.StockItemId;
-import com.eclub.domain.StockOperation;
-import com.eclub.domain.StockOperation.OperationId;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -17,8 +11,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.DirtiesContext;
 
-import static com.eclub.service.Products.IDEA_PAD;
-import static com.eclub.service.Products.MACBOOK;
+import static com.eclub.common.ProductStubs.IDEA_PAD;
+import static com.eclub.common.ProductStubs.MACBOOK;
+import static com.eclub.common.StockStubs.ADD_TO_STOCK;
+import static com.eclub.common.StockStubs.BATCH_NUMBER_1;
+import static com.eclub.common.StockStubs.IDEA_PAD_STOCK;
+import static com.eclub.common.StockStubs.MACBOOK_STOCK;
+import static com.eclub.common.StockStubs.OPERATION_ID_1;
+import static com.eclub.common.StockStubs.QUANTITY;
+import static com.eclub.common.StockStubs.REMOVE_FROM_STOCK;
+import static com.eclub.common.StockStubs.REMOVE_FROM_STOCK_TOO_MANY;
+import static com.eclub.common.StockStubs.STOCK_ITEM_ID_1;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
@@ -28,44 +31,6 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 
 @ServiceTest
 class StockServiceTest {
-    static final OperationId OPERATION_ID_1 = new OperationId("random-uuid");
-    static final StockItemId STOCK_ITEM_ID_1 = new StockItemId(1);
-    static final StockItemId STOCK_ITEM_ID_2 = new StockItemId(2);
-    static final BatchNumber BATCH_NUMBER_1 = new BatchNumber(1L);
-    static final BatchNumber BATCH_NUMBER_2 = new BatchNumber(2);
-    static final int QUANTITY = 1;
-
-    static final StockItem IDEA_PAD_STOCK = StockItem.builder()
-            .id(STOCK_ITEM_ID_1)
-            .product(IDEA_PAD)
-            .batchNumber(BATCH_NUMBER_1)
-            .quantity(QUANTITY)
-            .build();
-    static final StockItem MACBOOK_STOCK = StockItem.builder()
-            .id(STOCK_ITEM_ID_2)
-            .product(MACBOOK)
-            .batchNumber(BATCH_NUMBER_2)
-            .quantity(QUANTITY)
-            .build();
-
-    static final StockOperation ADD_TO_STOCK = AddToStock.builder()
-            .operationId(OPERATION_ID_1)
-            .productId(Products.PRODUCT_ID_1)
-            .batchNumber(BATCH_NUMBER_1)
-            .quantity(QUANTITY)
-            .build();
-
-    static final StockOperation REMOVE_FROM_STOCK = RemoveFromStock.builder()
-            .stockItemId(STOCK_ITEM_ID_1)
-            .operationId(OPERATION_ID_1)
-            .quantity(QUANTITY)
-            .build();
-
-    static final StockOperation REMOVE_FROM_STOCK_TOO_MANY = RemoveFromStock.builder()
-            .stockItemId(STOCK_ITEM_ID_1)
-            .operationId(OPERATION_ID_1)
-            .quantity(100 * QUANTITY)
-            .build();
 
     @Autowired DbTemplate db;
     @Autowired StockService stockService;
