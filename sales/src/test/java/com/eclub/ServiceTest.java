@@ -7,7 +7,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Test excludes queue and controller components, but includes local h2 db (see application-test.yaml)
+ * Service-level integration test
+ * Test excludes queue and web components, but includes local database (see application-test.yaml)
  */
 @SpringBootTest(classes = TestApp.class)
 @ActiveProfiles("test")
