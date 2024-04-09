@@ -11,5 +11,5 @@ public interface ProductUpdater {
     /**
      * Set non-null fields from source to target
      */
-    void map(ProductEntity source, @MappingTarget ProductEntity target);
+    void update(ProductEntity source, @MappingTarget ProductEntity target);
 }
