@@ -93,3 +93,5 @@ Build docker images and launch docker-compose in the `docker-compose` directory,
 ```shell
 ./gradlew buildDockerImage && cd docker-compose && docker-compose up
 ```
+
+`purchases` wil be accessible on `localhost:8086`, and `sales` on `localhost:8085`.
