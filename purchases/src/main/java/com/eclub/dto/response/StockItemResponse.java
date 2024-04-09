@@ -1,6 +1,5 @@
 package com.eclub.dto.response;
 
-import com.eclub.domain.StockItem.BatchNumber;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.extern.jackson.Jacksonized;
@@ -10,6 +9,6 @@ import lombok.extern.jackson.Jacksonized;
 public record StockItemResponse(
         Long id,
         ProductResponse product,
-        @Schema(description = "Batch number") BatchNumber batchNumber,
+        @Schema(description = "Batch number") Long batchNumber,
         Integer quantity) {
 }

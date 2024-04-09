@@ -2,17 +2,16 @@ package com.eclub.controller;
 
 import com.eclub.ControllerTest;
 import com.eclub.common.DbTemplate;
-import com.eclub.domain.Product;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec.ResponseSpecConsumer;
 
 import static com.eclub.common.ProductStubs.IDEA_PAD;
 import static com.eclub.common.ProductStubs.MACBOOK;
 import static com.eclub.controller.ClientTweaks.REST_HEADERS_CONF;
+import static com.eclub.controller.ResponseSpecs.productEqualTo;
 import static com.eclub.controller.RestSpecs.BAD_REQUEST_REST_RESPONSE;
 import static com.eclub.controller.RestSpecs.NOT_FOUND_REST_RESPONSE;
 import static com.eclub.controller.RestSpecs.OK_REST_RESPONSE;
@@ -96,7 +95,7 @@ class ProductControllerTest {
                 .exchange()
                 .expectAll(NOT_FOUND_REST_RESPONSE)
                 .expectBody()
-                    .jsonPath("$.error", "Item with id [1] does not exist");
+                    .jsonPath("$.error", "Product with id [1] does not exist");
         // @formatter:on
     }
 
@@ -107,7 +106,7 @@ class ProductControllerTest {
                 .exchange()
                 .expectAll(NOT_FOUND_REST_RESPONSE)
                 .expectBody()
-                    .jsonPath("$.error", "Item with id [1] does not exist");
+                    .jsonPath("$.error", "Product with id [1] does not exist");
         // @formatter:on
     }
 
@@ -158,11 +157,4 @@ class ProductControllerTest {
         assertThat(db.selectProductByName(MACBOOK.name())).isNotEmpty();
     }
 
-    static ResponseSpecConsumer productEqualTo(Product product) {
-        return s -> s.expectBody()
-                .jsonPath("$.name").value(equalTo(product.name()))
-                .jsonPath("$.vendor").value(equalTo(product.vendor()))
-                .jsonPath("$.description").value(equalTo(product.description()))
-                .jsonPath("$.id").value(equalTo((int) product.id().id()));
-    }
 }

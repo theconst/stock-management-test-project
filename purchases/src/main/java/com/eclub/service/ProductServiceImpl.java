@@ -69,6 +69,6 @@ class ProductServiceImpl implements ProductService {
     }
 
     private static <T> Mono<T> notFoundProduct(Long productId) {
-        return Mono.error(new NotFoundException("Item with id [%s] does not exist".formatted(productId)));
+        return Mono.error(new NotFoundException("Product with id [%s] does not exist".formatted(productId)));
     }
 }

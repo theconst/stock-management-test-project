@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+import static com.eclub.dto.response.StockOperationStatusResponse.pending;
+import static com.eclub.dto.response.StockOperationStatusResponse.processed;
+
 @RestController
 @RequestMapping("stock-items")
 @AllArgsConstructor(onConstructor = @__(@Autowired))
@@ -40,9 +43,7 @@ public class StockController {
     @Operation(summary = "Get status of stock operation")
     public Mono<StockOperationStatusResponse> getOperationStatus(@PathVariable("id") String id) {
         return stockService.isOperationProcessed(operationIdMapper.map(id))
-                .map(exists -> exists
-                        ? StockOperationStatusResponse.processed(id)
-                        : StockOperationStatusResponse.pending(id));
+                .map(exists -> exists ? processed(id) : pending(id));
     }
 
     @GetMapping("/")
