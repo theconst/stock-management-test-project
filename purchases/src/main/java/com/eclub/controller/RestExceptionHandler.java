@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 import java.util.Map;
 
 @RestControllerAdvice
-public class RestResponseEntityExceptionHandler {
+public class RestExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     Mono<ResponseEntity<Map<String, String>>> handleNotFound(NotFoundException notFoundException) {
