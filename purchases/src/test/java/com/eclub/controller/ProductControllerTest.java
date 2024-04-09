@@ -14,8 +14,6 @@ import static com.eclub.controller.RestSpecs.BAD_REQUEST_REST_RESPONSE;
 import static com.eclub.controller.RestSpecs.NOT_FOUND_REST_RESPONSE;
 import static com.eclub.controller.RestSpecs.OK_REST_RESPONSE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Fail.fail;
-import static org.hamcrest.Matchers.equalTo;
 
 @ControllerTest
 class ProductControllerTest {
@@ -38,9 +36,9 @@ class ProductControllerTest {
                 .exchange()
                 .expectAll(OK_REST_RESPONSE)
                 .expectBody()
-                    .jsonPath("$.name").value(equalTo("Lenovo IdeaPad"))
-                    .jsonPath("$.vendor").value(equalTo("Lenovo"))
-                    .jsonPath("$.description").value(equalTo("Cheap laptop"))
+                    .jsonPath("$.name").isEqualTo("Lenovo IdeaPad")
+                    .jsonPath("$.vendor").isEqualTo("Lenovo")
+                    .jsonPath("$.description").isEqualTo("Cheap laptop")
                     .jsonPath("$.id").exists();
         // @formatter:on
     }
@@ -59,7 +57,7 @@ class ProductControllerTest {
                 .exchange()
                 .expectAll(BAD_REQUEST_REST_RESPONSE)
                 .expectBody()
-                    .jsonPath("$.error", "Name must not be blank");
+                    .jsonPath("$.error").isEqualTo("Name must not be blank");
         // @formatter:on
     }
 
@@ -91,7 +89,7 @@ class ProductControllerTest {
                 .exchange()
                 .expectAll(NOT_FOUND_REST_RESPONSE)
                 .expectBody()
-                    .jsonPath("$.error", "Product with id [1] does not exist");
+                    .jsonPath("$.error").isEqualTo("Product with id [1] does not exist");
         // @formatter:on
     }
 
@@ -102,7 +100,7 @@ class ProductControllerTest {
                 .exchange()
                 .expectAll(NOT_FOUND_REST_RESPONSE)
                 .expectBody()
-                    .jsonPath("$.error", "Product with id [1] does not exist");
+                    .jsonPath("$.error").isEqualTo("Product with id [1] does not exist");
         // @formatter:on
     }
 
@@ -117,12 +115,60 @@ class ProductControllerTest {
 
     @Test
     void shouldReturnEmptyPageIfNoItemsExist() {
-        fail("Not implemented");
+        // @formatter:off
+        client.mutateWith(REST_HEADERS_CONF).get().uri("/products/")
+                .exchange()
+                .expectAll(OK_REST_RESPONSE)
+                .expectBody()
+                    .jsonPath("$.content").isEmpty()
+                    .jsonPath("$.totalPages").isEqualTo(0)
+                    .jsonPath("$.totalElements").isEqualTo(0)
+                    .jsonPath("$.size").isEqualTo(20)
+                    .jsonPath("$.last").isEqualTo(true)
+                    .jsonPath("$.first").isEqualTo(true)
+                    .jsonPath("$.number").isEqualTo(0);
+        // @formatter:on
     }
 
     @Test
     void shouldPaginateThroughProducts() {
-        fail("Not implemented");
+        db.insertProduct(IDEA_PAD);
+        db.insertProduct(MACBOOK);
+
+        // @formatter:off
+        client.mutateWith(REST_HEADERS_CONF).get().uri("/products/?pageNumber=0&pageSize=1")
+                .exchange()
+                .expectAll(OK_REST_RESPONSE)
+                .expectBody()
+                    .jsonPath("$.content").isArray()
+                    .jsonPath("$.content[0].id").isEqualTo(IDEA_PAD.id().id())
+                    .jsonPath("$.content[0].name").isEqualTo(IDEA_PAD.name())
+                    .jsonPath("$.content[0].vendor").isEqualTo(IDEA_PAD.vendor())
+                    .jsonPath("$.content[0].description").isEqualTo(IDEA_PAD.description())
+
+                    .jsonPath("$.totalPages").isEqualTo(2)
+                    .jsonPath("$.totalElements").isEqualTo(2)
+                    .jsonPath("$.size").isEqualTo(1)
+                    .jsonPath("$.last").isEqualTo(false)
+                    .jsonPath("$.first").isEqualTo(true)
+                    .jsonPath("$.number").isEqualTo(0);
+        client.mutateWith(REST_HEADERS_CONF).get().uri("/products/?pageNumber=1&pageSize=1")
+                .exchange()
+                .expectAll(OK_REST_RESPONSE)
+                .expectBody()
+                .jsonPath("$.content").isArray()
+                .jsonPath("$.content[0].id").isEqualTo(MACBOOK.id().id())
+                .jsonPath("$.content[0].name").isEqualTo(MACBOOK.name())
+                .jsonPath("$.content[0].vendor").isEqualTo(MACBOOK.vendor())
+                .jsonPath("$.content[0].description").isEqualTo(MACBOOK.description())
+
+                .jsonPath("$.totalPages").isEqualTo(2)
+                .jsonPath("$.totalElements").isEqualTo(2)
+                .jsonPath("$.size").isEqualTo(1)
+                .jsonPath("$.last").isEqualTo(true)
+                .jsonPath("$.first").isEqualTo(false)
+                .jsonPath("$.number").isEqualTo(1);
+        // @formatter:on
     }
 
     @Test

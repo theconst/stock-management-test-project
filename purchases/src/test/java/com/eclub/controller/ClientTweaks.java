@@ -10,6 +10,8 @@ import org.springframework.test.web.reactive.server.WebTestClientConfigurer;
 public final class ClientTweaks {
 
     static WebTestClientConfigurer REST_HEADERS_CONF = (builder, httpHandlerBuilder, connector) ->
-            builder.defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
+            builder
+                    .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
+                    .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON.toString())
                     .build();
 }

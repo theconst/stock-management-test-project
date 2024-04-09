@@ -10,12 +10,13 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import java.util.UUID;
 
 import static com.eclub.common.ProductStubs.IDEA_PAD;
+import static com.eclub.common.ProductStubs.MACBOOK;
 import static com.eclub.common.StockStubs.IDEA_PAD_STOCK;
+import static com.eclub.common.StockStubs.MACBOOK_STOCK;
+import static com.eclub.common.StockStubs.QUANTITY;
 import static com.eclub.controller.ClientTweaks.REST_HEADERS_CONF;
 import static com.eclub.controller.ResponseSpecs.stockEqualTo;
 import static com.eclub.controller.RestSpecs.OK_REST_RESPONSE;
-import static org.assertj.core.api.BDDAssertions.fail;
-import static org.hamcrest.Matchers.equalTo;
 
 @ControllerTest
 class StockControllerTest {
@@ -53,8 +54,8 @@ class StockControllerTest {
                 .exchange()
                 .expectAll(OK_REST_RESPONSE)
                 .expectBody()
-                    .jsonPath("$.stockOperationId").value(equalTo(uuid.toString()))
-                    .jsonPath("$.status").value(equalTo("PENDING"));
+                    .jsonPath("$.stockOperationId").isEqualTo(uuid.toString())
+                    .jsonPath("$.status").isEqualTo("PENDING");
         // @formatter:on
     }
 
@@ -68,18 +69,74 @@ class StockControllerTest {
                 .exchange()
                 .expectAll(OK_REST_RESPONSE)
                 .expectBody()
-                    .jsonPath("$.stockOperationId").value(equalTo(uuid))
-                    .jsonPath("$.status").value(equalTo("PROCESSED"));
+                    .jsonPath("$.stockOperationId").isEqualTo(uuid)
+                    .jsonPath("$.status").isEqualTo("PROCESSED");
         // @formatter:on
     }
 
     @Test
     void shouldReturnEmptyPageIfNoStockItems() {
-        fail("Not implemented");
+        // @formatter:off
+        client.mutateWith(REST_HEADERS_CONF).get().uri("/stock-items/")
+                .exchange()
+                .expectAll(OK_REST_RESPONSE)
+                .expectBody()
+                .jsonPath("$.content").isEmpty()
+                .jsonPath("$.totalPages").isEqualTo(0)
+                .jsonPath("$.totalElements").isEqualTo(0)
+                .jsonPath("$.size").isEqualTo(20)
+                .jsonPath("$.last").isEqualTo(true)
+                .jsonPath("$.first").isEqualTo(true)
+                .jsonPath("$.number").isEqualTo(0);
+        // @formatter:on
     }
 
     @Test
     void shouldReturnPageIfStockItemsPresent() {
-        fail("Not implemented");
+        db.insertProduct(IDEA_PAD);
+        db.insertProduct(MACBOOK);
+        db.insertStock(IDEA_PAD_STOCK);
+        db.insertStock(MACBOOK_STOCK);
+
+        // @formatter:off
+        client.mutateWith(REST_HEADERS_CONF).get().uri("/stock-items/?pageNumber=0&pageSize=1")
+                .exchange()
+                .expectAll(OK_REST_RESPONSE)
+                .expectBody()
+                .jsonPath("$.content").isArray()
+                .jsonPath("$.content[0].batchNumber").isEqualTo(1)
+                .jsonPath("$.content[0].quantity").isEqualTo(QUANTITY)
+                .jsonPath("$.content[0].id").isEqualTo(1)
+                .jsonPath("$.content[0].product.id").isEqualTo(IDEA_PAD.id().id())
+                .jsonPath("$.content[0].product.name").isEqualTo(IDEA_PAD.name())
+                .jsonPath("$.content[0].product.vendor").isEqualTo(IDEA_PAD.vendor())
+                .jsonPath("$.content[0].product.description").isEqualTo(IDEA_PAD.description())
+
+                .jsonPath("$.totalPages").isEqualTo(2)
+                .jsonPath("$.totalElements").isEqualTo(2)
+                .jsonPath("$.size").isEqualTo(1)
+                .jsonPath("$.last").isEqualTo(false)
+                .jsonPath("$.first").isEqualTo(true)
+                .jsonPath("$.number").isEqualTo(0);
+        client.mutateWith(REST_HEADERS_CONF).get().uri("/stock-items/?pageNumber=1&pageSize=1")
+                .exchange()
+                .expectAll(OK_REST_RESPONSE)
+                .expectBody()
+                .jsonPath("$.content").isArray()
+                .jsonPath("$.content[0].id").isEqualTo(2)
+                .jsonPath("$.content[0].batchNumber").isEqualTo(2)
+                .jsonPath("$.content[0].quantity").isEqualTo(QUANTITY)
+                .jsonPath("$.content[0].product.id").isEqualTo(MACBOOK.id().id())
+                .jsonPath("$.content[0].product.name").isEqualTo(MACBOOK.name())
+                .jsonPath("$.content[0].product.vendor").isEqualTo(MACBOOK.vendor())
+                .jsonPath("$.content[0].product.description").isEqualTo(MACBOOK.description())
+
+                .jsonPath("$.totalPages").isEqualTo(2)
+                .jsonPath("$.totalElements").isEqualTo(2)
+                .jsonPath("$.size").isEqualTo(1)
+                .jsonPath("$.last").isEqualTo(true)
+                .jsonPath("$.first").isEqualTo(false)
+                .jsonPath("$.number").isEqualTo(1);
+        // @formatter:on
     }
 }
