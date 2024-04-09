@@ -70,7 +70,7 @@ class PurchaseControllerTest {
                 .exchange()
                 .expectAll(BAD_REQUEST_REST_RESPONSE)
                 .expectBody()
-                    .jsonPath("$.error", "Product id is required");
+                    .jsonPath("$.productIdViolation", "Product id is required");
         // @formatter:on
 
         verifyNoInteractions(addToStockPublisher);
@@ -90,7 +90,7 @@ class PurchaseControllerTest {
                 .exchange()
                 .expectAll(BAD_REQUEST_REST_RESPONSE)
                 .expectBody()
-                .jsonPath("$.error", "Batch number is required");
+                .jsonPath("$.batchNumberViolation", "Batch number is required");
         // @formatter:on
 
         verifyNoInteractions(addToStockPublisher);
@@ -109,7 +109,7 @@ class PurchaseControllerTest {
                 .exchange()
                 .expectAll(BAD_REQUEST_REST_RESPONSE)
                 .expectBody()
-                    .jsonPath("$.error", "Quantity is required");
+                    .jsonPath("$.quantityViolation", "Quantity is required");
         // @formatter:on
 
         verifyNoInteractions(addToStockPublisher);

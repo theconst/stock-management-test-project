@@ -24,7 +24,7 @@ class ProductControllerTest {
 
     @Test
     void shouldCreateProductWhenProductNameSpecified() {
-        // @formatter:off
+        // @formatter:off "name" : "",
         client.mutateWith(REST_HEADERS_CONF).post().uri("/products")
                 .bodyValue("""
                         {
@@ -57,7 +57,7 @@ class ProductControllerTest {
                 .exchange()
                 .expectAll(BAD_REQUEST_REST_RESPONSE)
                 .expectBody()
-                    .jsonPath("$.error").isEqualTo("Name must not be blank");
+                    .jsonPath("$.nameViolation").isEqualTo("Name must not be blank");
         // @formatter:on
     }
 

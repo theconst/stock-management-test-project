@@ -6,7 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.support.WebExchangeBindException;
 import reactor.core.publisher.Mono;
 
 import java.util.Map;
@@ -22,14 +24,15 @@ public class RestExceptionHandler {
                 .body(Map.of("error", notFoundException.getMessage())));
     }
 
-    // Error from not blank is not propagated
-    // https://stackoverflow.com/questions/64892157/spring-boot-valid-doesnt-display-message-from-notblank
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        return ex.getBindingResult().getAllErrors().stream().map(error -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            return Map.entry(fieldName, errorMessage);
-        }).collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(WebExchangeBindException.class)
+    public Map<String, String> handleValidationExceptions(WebExchangeBindException ex) {
+        return ex.getBindingResult().getAllErrors().stream()
+                .map(FieldError.class::cast)
+                .collect(toMap(RestExceptionHandler::withViolationSuffix, FieldError::getDefaultMessage));
+    }
+
+    private static String withViolationSuffix(FieldError fieldError) {
+        return fieldError.getField() + "Violation";
     }
 }

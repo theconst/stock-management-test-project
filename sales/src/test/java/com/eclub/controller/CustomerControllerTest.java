@@ -57,7 +57,7 @@ class CustomerControllerTest {
                 .exchange()
                 .expectAll(BAD_REQUEST_REST_RESPONSE)
                 .expectBody()
-                    .jsonPath("$.error").isEqualTo("First name is required");
+                    .jsonPath("$.firstNameViolation").isEqualTo("First name is required");
         // @formatter:on
     }
 
@@ -76,7 +76,7 @@ class CustomerControllerTest {
                 .exchange()
                 .expectAll(BAD_REQUEST_REST_RESPONSE)
                 .expectBody()
-                    .jsonPath("$.error").isEqualTo("Last name is required");
+                    .jsonPath("$.lastNameViolation").isEqualTo("Last name is required");
         // @formatter:on
     }
 
@@ -91,7 +91,7 @@ class CustomerControllerTest {
                         }
                         """)
                 .exchange()
-                .expectAll(BAD_REQUEST_REST_RESPONSE)
+                .expectAll(OK_REST_RESPONSE)
                 .expectBody()
                     .jsonPath("$.firstName").isEqualTo("John")
                     .jsonPath("$.lastName").isEqualTo("Smith")
